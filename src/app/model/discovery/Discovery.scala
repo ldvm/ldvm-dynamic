@@ -55,11 +55,12 @@ class Discovery {
         lastStates.map { state =>
           val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
           eventualCheckResult.collect {
-            case c: CheckResult if c.status == Status.Success => PortMatch(port, pipeline, c.maybeState)
+            case c: CheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
+            case _ => None
           }
         }
       }
-    }
+    }.map { _.flatten }
   }
 
   private def buildPipelines(componentInstance: ComponentInstance, portMatches: Map[Port, Seq[PortMatch]]): Future[Seq[Pipeline]] = {
