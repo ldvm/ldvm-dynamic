@@ -35,5 +35,22 @@ class DiscoverySpec extends Specification {
       ))).await
 
     }
+
+    "discover nothing" >> { implicit ee: ExecutionEnv =>
+
+      val dummySource = new JenaDataSource(ModelFactory.createDefaultModel())
+      val dummySuccessVisualizer = new DummyVisualizer(Status.Failure)
+
+      val input = new DiscoveryInput(
+        Seq(dummySource),
+        Seq(dummySuccessVisualizer),
+        Seq()
+      )
+
+      val future = new Discovery().discover(input)
+
+      future must beEqualTo(Seq()).await
+
+    }
   }
 }
