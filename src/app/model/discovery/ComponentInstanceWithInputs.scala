@@ -4,8 +4,8 @@ import scala.concurrent.Future
 
 trait ComponentInstanceWithInputs extends ComponentInstance {
 
-  def checkPort(port: InputPort, state: State, outputDataSample: DataSample) : Future[PortCheckResult]
+  def checkPort(port: Port, state: Option[State], outputDataSample: DataSample): Future[CheckResult]
 
-  def getInputPorts : Future[Seq[InputPort]]
+  def getInputPorts : Seq[Port]
 
 }

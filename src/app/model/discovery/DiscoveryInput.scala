@@ -1,3 +1,3 @@
 package model.discovery
 
-case class DiscoveryInput(dataSources: Seq[ComponentInstanceWithOutput], visualizers: Seq[ComponentInstanceWithInputs], processors: Seq[ProcessorInstance])
+case class DiscoveryInput(dataSources: Seq[DataSourceInstance], visualizers: Seq[VisualizerInstance], processors: Seq[ProcessorInstance])

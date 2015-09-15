@@ -1,6 +1,6 @@
 package model.discovery
 
-trait DataSample {
+case class DataSample() {
 
 
 
