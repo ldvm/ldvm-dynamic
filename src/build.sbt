@@ -11,6 +11,7 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   specs2 % Test,
+  "org.scalatest" % "scalatest_2.11" % "2.2.5" % Test,
   "org.apache.jena" % "jena" % "2.13.0",
   "org.apache.jena" % "jena-arq" % "2.13.0"
 )
