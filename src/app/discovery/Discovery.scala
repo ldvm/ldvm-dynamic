@@ -1,5 +1,6 @@
 package discovery
 
+import discovery.model.PortCheckResult.Status
 import discovery.model._
 import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs, DataSourceInstance, ProcessorInstance}
 import discovery.model.internal.IterationData
@@ -42,24 +43,22 @@ class Discovery {
     }
   }
 
-  private def tryMatchPorts(remainingPorts: Seq[Port], givenPipelines: Seq[Pipeline], portMatches: Map[Port, Seq[PortMatch]], lastStates: Seq[Option[State]], componentInstance: ComponentInstanceWithInputs): Future[Seq[Pipeline]] = {
+  private def tryMatchPorts(remainingPorts: Seq[Port], givenPipelines: Seq[Pipeline], portMatches: Map[Port, Seq[PortMatch]], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[Pipeline]] = {
     remainingPorts match {
       case Nil => buildPipelines(componentInstance, portMatches) //TODO check all ports have > 0 matches
-      case head :: tail => {
-        tryMatchPipelines(head, givenPipelines, lastStates, componentInstance).flatMap { matches =>
+      case head :: tail => tryMatchPipelines(head, givenPipelines, lastStates, componentInstance).flatMap { matches =>
           tryMatchPorts(tail, givenPipelines, portMatches + (head -> matches), matches.map(_.maybeState), componentInstance)
         }
-      }
     }
   }
 
-  private def tryMatchPipelines(port: Port, givenPipelines: Seq[Pipeline], lastStates: Seq[Option[State]], componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
+  private def tryMatchPipelines(port: Port, givenPipelines: Seq[Pipeline], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
     Future.sequence {
       givenPipelines.flatMap { pipeline =>
         lastStates.map { state =>
           val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
           eventualCheckResult.collect {
-            case c: CheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
+            case c: PortCheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
             case _ => None
           }
         }
@@ -79,7 +78,7 @@ class Discovery {
     val components = portMatches.flatMap(_.startPipeline.components) :+ pipelineComponent
 
     val newBindings = portMatches.map { portMatch =>
-      Binding(portMatch.startPipeline.lastComponent, portMatch.port, pipelineComponent)
+      PortBinding(portMatch.startPipeline.lastComponent, portMatch.port, pipelineComponent)
     }
     val bindings = portMatches.flatMap(_.startPipeline.bindings) ++ newBindings
 

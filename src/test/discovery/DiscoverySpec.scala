@@ -2,6 +2,7 @@ package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
 import discovery.components.{DummyVisualizer, JenaDataSource}
+import discovery.model.PortCheckResult.Status
 import discovery.model._
 import discovery.model.components.ComponentInstance
 import org.scalatest.LoneElement._
