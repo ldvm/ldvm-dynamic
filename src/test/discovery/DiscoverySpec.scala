@@ -22,7 +22,7 @@ class DiscoverySpec extends LdvmSpec {
     val dsComponent = PipelineComponent("A", dummySource)
     val vComponent = PipelineComponent("A", dummySuccessVisualizer)
 
-    val future = new Discovery().discover(input)
+    val future = createDiscovery().discover(input)
 
     val pipeline = future.futureValue.loneElement
     assertBindings(pipeline, ExpectedBinding(dummySource, "PORT1", dummySuccessVisualizer))
@@ -30,7 +30,9 @@ class DiscoverySpec extends LdvmSpec {
     assertOutput(pipeline, dummySuccessVisualizer, DataSample())
   }
 
+
   it should "discover nothing" in {
+
     val dummySource = new JenaDataSource(ModelFactory.createDefaultModel())
     val dummySuccessVisualizer = new DummyVisualizer(Status.Failure)
 
@@ -40,9 +42,13 @@ class DiscoverySpec extends LdvmSpec {
       Seq()
     )
 
-    val future = new Discovery().discover(input)
+    val future = createDiscovery().discover(input)
 
     future.futureValue shouldBe empty
+  }
+
+  def createDiscovery(): Discovery = {
+    new Discovery(new DiscoveryPortMatcher())
   }
 
   // Helper assert methods ------
