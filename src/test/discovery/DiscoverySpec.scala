@@ -48,7 +48,7 @@ class DiscoverySpec extends LdvmSpec {
   }
 
   def createDiscovery(): Discovery = {
-    new Discovery(new DiscoveryPortMatcher())
+    new Discovery(new DiscoveryPortMatcher(new PipelineBuilder()))
   }
 
   // Helper assert methods ------

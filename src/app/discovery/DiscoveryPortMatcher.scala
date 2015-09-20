@@ -7,7 +7,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-class DiscoveryPortMatcher {
+class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
 
   def tryMatchPorts(componentInstance: ComponentInstanceWithInputs, givenPipelines: Seq[Pipeline]): Future[Seq[Pipeline]] = {
     val ports = componentInstance.getInputPorts.sortBy(_.priority)
@@ -41,28 +41,8 @@ class DiscoveryPortMatcher {
   private def buildPipelines(componentInstance: ComponentInstance, portMatches: Map[Port, Seq[PortMatch]]): Future[Seq[Pipeline]] = {
     val allCombinations = combine(portMatches.values)
     Future.sequence(
-      allCombinations.map { portSolutions => buildPipeline(componentInstance, portSolutions) }
+      allCombinations.map { portSolutions => pipelineBuilder.buildPipeline(componentInstance, portSolutions) }
     )
-  }
-
-  private def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch]): Future[Pipeline] = {
-    val pipelineComponent = PipelineComponent("A", componentInstance)
-    val components = portMatches.flatMap(_.startPipeline.components) :+ pipelineComponent
-
-    val newBindings = portMatches.map { portMatch =>
-      PortBinding(portMatch.startPipeline.lastComponent, portMatch.port, pipelineComponent)
-    }
-    val bindings = portMatches.flatMap(_.startPipeline.bindings) ++ newBindings
-
-
-    val dataSamples = portMatches.map { pm => pm.port -> pm.startPipeline.lastOutputDataSample }.toMap
-    val eventuallyDataSample = componentInstance match {
-      case c: ProcessorInstance => c.getOutputDataSample(portMatches.last.maybeState, dataSamples)
-      case _ => Future.successful(DataSample())
-    }
-    eventuallyDataSample.map { dataSample => // TODO: Future data sample to pipeline
-      Pipeline(components, bindings, pipelineComponent, dataSample)
-    }
   }
 
   private def combine[A](xs: Traversable[Traversable[A]]): Seq[Seq[A]] = {
