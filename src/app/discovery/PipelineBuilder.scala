@@ -1,5 +1,7 @@
 package discovery
 
+import java.util.concurrent.atomic.AtomicInteger
+
 import discovery.model._
 import discovery.model.components.{ComponentInstance, ProcessorInstance}
 import play.api.libs.concurrent.Execution.Implicits._
@@ -7,8 +9,10 @@ import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 
 class PipelineBuilder {
+  val pipelineComponentCounter: AtomicInteger = new AtomicInteger()
+
   def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch]): Future[Pipeline] = {
-    val newLastComponent = PipelineComponent("A", componentInstance) // TODO: generate unique name
+    val newLastComponent = PipelineComponent("PC" + pipelineComponentCounter.incrementAndGet(), componentInstance)
     val eventuallyDataSample: Future[DataSample] = dataSample(componentInstance, portMatches)
     eventuallyDataSample.map { dataSample => // TODO: Future data sample to pipeline
       Pipeline(
