@@ -3,7 +3,7 @@ package discovery
 import java.util.concurrent.atomic.AtomicInteger
 
 import discovery.model._
-import discovery.model.components.{VisualizerInstance, ComponentInstance, ProcessorInstance}
+import discovery.model.components.{DataSourceInstance, VisualizerInstance, ComponentInstance, ProcessorInstance}
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
@@ -12,7 +12,7 @@ class PipelineBuilder {
   val pipelineComponentCounter: AtomicInteger = new AtomicInteger()
 
   def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch]): Future[Pipeline] = {
-    val newLastComponent = PipelineComponent("PC" + pipelineComponentCounter.incrementAndGet(), componentInstance)
+    val newLastComponent = newComponent(componentInstance)
     val eventuallyDataSample: Future[DataSample] = dataSample(componentInstance, portMatches)
     eventuallyDataSample.map { dataSample =>
       Pipeline(
@@ -21,6 +21,21 @@ class PipelineBuilder {
         newLastComponent,
         dataSample)
     }
+  }
+
+  def buildInitialPipeline(dataSource: DataSourceInstance): Future[Pipeline] = {
+    val pipelineComponent = newComponent(dataSource)
+    dataSource.getOutputDataSample(state = None, dataSamples = Map()).map { outputDataSample =>
+      Pipeline(
+        Seq(pipelineComponent),
+        Seq(),
+        pipelineComponent,
+        outputDataSample)
+    }
+  }
+
+  def newComponent(componentInstance: ComponentInstance): PipelineComponent = {
+    PipelineComponent("PC" + pipelineComponentCounter.incrementAndGet(), componentInstance)
   }
 
   private def pipelineComponents(portMatches: Seq[PortMatch], newLastComponent: PipelineComponent): Seq[PipelineComponent] = {

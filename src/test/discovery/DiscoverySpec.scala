@@ -45,7 +45,8 @@ class DiscoverySpec extends LdvmSpec {
   }
 
   def createDiscovery(): Discovery = {
-    new Discovery(new DiscoveryPortMatcher(new PipelineBuilder()))
+    val pipelineBuilder = new PipelineBuilder()
+    new Discovery(new DiscoveryPortMatcher(pipelineBuilder), pipelineBuilder)
   }
 
 }

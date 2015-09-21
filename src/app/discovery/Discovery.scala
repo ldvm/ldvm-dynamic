@@ -7,7 +7,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-class Discovery(portMatcher: DiscoveryPortMatcher) {
+class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuilder) {
 
   val MAX_ITERATIONS = 10
 
@@ -40,12 +40,7 @@ class Discovery(portMatcher: DiscoveryPortMatcher) {
   }
 
   private def createInitialPipelines(dataSources: Seq[DataSourceInstance]): Future[Seq[Pipeline]] = {
-    Future.sequence(dataSources.map { dataSource =>
-      val pipelineComponent = PipelineComponent("A", dataSource)
-      dataSource.getOutputDataSample(None, Map()).map { outputDataSample =>
-        Pipeline(Seq(pipelineComponent), Seq(), pipelineComponent, outputDataSample)
-      }
-    })
+    Future.sequence(dataSources.map(pipelineBuilder.buildInitialPipeline))
   }
 
 }

@@ -31,16 +31,17 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
 
   private def tryMatchGivenPipelinesWithPort(port: Port, givenPipelines: Seq[Pipeline], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
     Future.sequence {
-      givenPipelines.flatMap { pipeline =>
-        lastStates.map { state =>
-          val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
-          eventualCheckResult.collect {
-            case c: PortCheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
-            case _ => None
-          }
+      for (
+        pipeline <- givenPipelines;
+        state <- lastStates
+      ) yield {
+        val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
+        eventualCheckResult.collect {
+          case c: PortCheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
+          case _ => None
         }
       }
-    }.map {_.flatten}
+    }.map(_.flatten)
   }
 
   private def buildPipelines(componentInstance: ComponentInstance, portMatches: Map[Port, Seq[PortMatch]]): Future[Seq[Pipeline]] = {
