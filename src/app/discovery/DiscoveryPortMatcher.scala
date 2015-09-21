@@ -11,20 +11,25 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
 
   def tryMatchPorts(componentInstance: ComponentInstanceWithInputs, givenPipelines: Seq[Pipeline]): Future[Seq[Pipeline]] = {
     val ports = componentInstance.getInputPorts.sortBy(_.priority)
-    tryMatchPorts(ports, givenPipelines, Map(), Seq(None), componentInstance)
+    tryMatchPorts(ports, givenPipelines, portMatches = Map(), lastStates = Seq(None), componentInstance)
   }
 
   private def tryMatchPorts(remainingPorts: Seq[Port], givenPipelines: Seq[Pipeline], portMatches: Map[Port, Seq[PortMatch]], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[Pipeline]] = {
     remainingPorts match {
-      case Nil => buildPipelines(componentInstance, portMatches) //TODO check all ports have > 0 matches
-      case head :: tail =>
-        tryMatchPipelines(head, givenPipelines, lastStates, componentInstance).flatMap { matches =>
-          tryMatchPorts(tail, givenPipelines, portMatches + (head -> matches), matches.map(_.maybeState), componentInstance)
+      case Nil =>
+        if (portMatches.values.forall(_.nonEmpty)) {
+          buildPipelines(componentInstance, portMatches)
+        } else {
+          Future.successful(Seq())
+        }
+      case headPort :: tail =>
+        tryMatchGivenPipelinesWithPort(headPort, givenPipelines, lastStates, componentInstance).flatMap { matches =>
+          tryMatchPorts(tail, givenPipelines, portMatches + (headPort -> matches), matches.map(_.maybeState), componentInstance)
         }
     }
   }
 
-  private def tryMatchPipelines(port: Port, givenPipelines: Seq[Pipeline], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
+  private def tryMatchGivenPipelinesWithPort(port: Port, givenPipelines: Seq[Pipeline], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
     Future.sequence {
       givenPipelines.flatMap { pipeline =>
         lastStates.map { state =>
