@@ -12,7 +12,16 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
+src/project/.sbtserver*
+src/.sbtserver
 
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
+src/.idea
+src/.idea_modules
+src/projectFilesBackup
+src/project/idea.sbt
+src/project/play-fork-run.sbt
+src/project/sbt-ui.sbt
+

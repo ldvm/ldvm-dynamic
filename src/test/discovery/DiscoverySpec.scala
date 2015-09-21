@@ -19,9 +19,6 @@ class DiscoverySpec extends LdvmSpec {
       Seq()
     )
 
-    val dsComponent = PipelineComponent("A", dummySource)
-    val vComponent = PipelineComponent("A", dummySuccessVisualizer)
-
     val future = createDiscovery().discover(input)
 
     val pipeline = future.futureValue.loneElement
@@ -51,27 +48,4 @@ class DiscoverySpec extends LdvmSpec {
     new Discovery(new DiscoveryPortMatcher(new PipelineBuilder()))
   }
 
-  // Helper assert methods ------
-
-  case class ExpectedBinding(startComponent: ComponentInstance, portName: String, endComponent: ComponentInstance)
-
-  def assertBindings(pipeline: Pipeline, expectedBindings: ExpectedBinding*) = {
-    val actualBindings = pipeline.bindings.map {
-      b => ExpectedBinding(b.startComponent.componentInstance, b.endPort.name, b.endComponent.componentInstance)
-    }
-    actualBindings should contain theSameElementsAs expectedBindings
-    actualBindings should have size expectedBindings.size
-  }
-
-  def assertCorrectComponents(pipeline: Pipeline) = {
-    val bindingComponents = pipeline.bindings
-      .flatMap { b => Seq(b.startComponent, b.endComponent) }
-      .toSet
-    pipeline.components should contain theSameElementsAs bindingComponents
-  }
-
-  def assertOutput(pipeline: Pipeline, expectedLastComponent: ComponentInstance, expectedDataSample: DataSample) = {
-    pipeline.lastComponent.componentInstance shouldBe expectedLastComponent
-    pipeline.lastOutputDataSample shouldBe expectedDataSample
-  }
 }

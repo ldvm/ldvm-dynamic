@@ -14,7 +14,7 @@ class Discovery(portMatcher: DiscoveryPortMatcher) {
   def discover(input: DiscoveryInput): Future[Seq[Pipeline]] = {
     createInitialPipelines(input.dataSources).flatMap { initialPipelines =>
       val possibleComponents = input.processors ++ input.visualizers
-      iterate(0, IterationData(initialPipelines, Seq(), possibleComponents))
+      iterate(0, IterationData(initialPipelines, completedPipelines = Seq(), possibleComponents))
     }
   }
 
