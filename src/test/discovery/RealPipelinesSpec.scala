@@ -8,10 +8,12 @@ import discovery.components.visualizer.GoogleMapsVisualizer
 import discovery.model.{DiscoveryInput, RdfDataSample}
 import org.scalatest.LoneElement._
 import org.scalatest.concurrent.ScalaFutures._
+import org.scalatest.time.{Seconds, Span}
 
 class RealPipelinesSpec extends LdvmSpec {
 
   var ttlPath = "test/discovery/ttl/"
+  implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
 
   "Discovery" should "discover LDOW 2015 pipeline" in {
 
