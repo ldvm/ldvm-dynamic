@@ -1,9 +1,12 @@
 package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
-import discovery.components.analyzer.RuianGeocoderAnalyzer
+import discovery.components.analyzer.{TownsExtractorAnalyzer, RuianGeocoderAnalyzer}
 import discovery.components.datasource.JenaDataSource
-import discovery.model.{DataSample, DiscoveryInput}
+import discovery.components.visualizer.GoogleMapsVisualizer
+import discovery.model.{RdfDataSample, DataSample, DiscoveryInput}
+import org.scalatest.LoneElement._
+import org.scalatest.concurrent.ScalaFutures._
 
 class RealPipelinesSpec extends LdvmSpec {
 
@@ -34,7 +37,7 @@ class RealPipelinesSpec extends LdvmSpec {
     )
 
     assertCorrectComponents(pipeline)
-    assertOutput(pipeline, googleMaps, DataSample())
+    assertOutput(pipeline, googleMaps, RdfDataSample(""))
 
   }
 

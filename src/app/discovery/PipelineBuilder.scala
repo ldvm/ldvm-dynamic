@@ -36,7 +36,7 @@ class PipelineBuilder {
     val dataSamples = portMatches.map { portMatch => portMatch.port -> portMatch.startPipeline.lastOutputDataSample }.toMap
     componentInstance match {
       case c: ProcessorInstance => c.getOutputDataSample(portMatches.last.maybeState, dataSamples)
-      case _ => Future.successful(DataSample())
+      case _ => Future.successful(RdfDataSample(""))
     }
   }
 }

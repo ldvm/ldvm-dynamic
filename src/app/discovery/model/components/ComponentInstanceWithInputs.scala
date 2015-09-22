@@ -4,6 +4,8 @@ import discovery.model._
 import discovery.model.components.descriptor.{AskDescriptor, Descriptor}
 
 import scala.concurrent.Future
+import play.api.libs.concurrent.Execution.Implicits._
+
 
 trait ComponentInstanceWithInputs extends ComponentInstance {
 

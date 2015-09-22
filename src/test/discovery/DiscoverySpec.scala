@@ -5,7 +5,6 @@ import discovery.components.datasource.JenaDataSource
 import discovery.components.visualizer.DummyVisualizer
 import discovery.model.PortCheckResult.Status
 import discovery.model._
-import discovery.model.components.ComponentInstance
 import org.scalatest.LoneElement._
 import org.scalatest.concurrent.ScalaFutures._
 
@@ -25,7 +24,7 @@ class DiscoverySpec extends LdvmSpec {
     val pipeline = future.futureValue.loneElement
     assertBindings(pipeline, ExpectedBinding(dummySource, "PORT1", dummySuccessVisualizer))
     assertCorrectComponents(pipeline)
-    assertOutput(pipeline, dummySuccessVisualizer, DataSample())
+    assertOutput(pipeline, dummySuccessVisualizer, RdfDataSample(""))
   }
 
 
