@@ -1,5 +1,7 @@
 package discovery
 
+import java.io.File
+
 import discovery.components.analyzer.{RuianGeocoderAnalyzer, TownsExtractorAnalyzer}
 import discovery.components.datasource.JenaDataSource
 import discovery.components.visualizer.GoogleMapsVisualizer
@@ -9,12 +11,12 @@ import org.scalatest.concurrent.ScalaFutures._
 
 class RealPipelinesSpec extends LdvmSpec {
 
-  var ttlPath = "src/test/discovery/ttl/"
+  var ttlPath = "test/discovery/ttl/"
 
   "Discovery" should "discover LDOW 2015 pipeline" in {
 
-    val ruian = new JenaDataSource(JenaUtil.modelFromTtl(ttlPath + "ruian.ttl"))
-    val institutions = new JenaDataSource(JenaUtil.modelFromTtl(ttlPath + "ipp.ttl"))
+    val ruian = new JenaDataSource(JenaUtil.modelFromTtlFile(ttlPath + "ruian.ttl"))
+    val institutions = new JenaDataSource(JenaUtil.modelFromTtlFile(ttlPath + "ipp.ttl"))
     val googleMaps = new GoogleMapsVisualizer()
     val townsExtractor = new TownsExtractorAnalyzer()
     val ruianGeocoder = new RuianGeocoderAnalyzer()
