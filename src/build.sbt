@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.11" % "2.2.5" % Test,
   "org.apache.jena" % "jena" % "2.13.0",
   "org.apache.jena" % "jena-arq" % "2.13.0",
-  "commons-io" % "commons-io" % "2.4"
+  "commons-io" % "commons-io" % "2.4",
+  "com.jsuereth" %% "scala-arm" % "1.4"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
