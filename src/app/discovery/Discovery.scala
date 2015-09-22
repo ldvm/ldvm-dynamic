@@ -31,9 +31,10 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
   }
 
   private def iterationBody(iterationData: IterationData): Future[IterationData] = {
-    Future.sequence {
+    val eventualPipelines = Future.sequence {
       iterationData.possibleComponents.map { c => portMatcher.tryMatchPorts(c, iterationData.givenPipelines) }
-    }.map { pipelines =>
+    }
+    eventualPipelines.map { pipelines =>
       val (completePipelines, incompletePipelines) = pipelines.flatten.partition(_.isComplete)
       IterationData(iterationData.givenPipelines ++ incompletePipelines, iterationData.completedPipelines ++ completePipelines, iterationData.possibleComponents)
     }

@@ -2,4 +2,4 @@ package discovery
 
 import org.scalatest.{FlatSpec, Matchers}
 
-trait LdvmSpec extends FlatSpec with Matchers
+trait LdvmSpec extends FlatSpec with Matchers with PipelineAsserts

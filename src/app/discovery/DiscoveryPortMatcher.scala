@@ -30,7 +30,7 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
   }
 
   private def tryMatchGivenPipelinesWithPort(port: Port, givenPipelines: Seq[Pipeline], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
-    Future.sequence {
+    val eventualMaybeMatches = Future.sequence {
       for (
         pipeline <- givenPipelines;
         state <- lastStates
@@ -41,7 +41,8 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
           case _ => None
         }
       }
-    }.map(_.flatten)
+    }
+    eventualMaybeMatches.map(_.flatten)
   }
 
   private def buildPipelines(componentInstance: ComponentInstance, portMatches: Map[Port, Seq[PortMatch]]): Future[Seq[Pipeline]] = {

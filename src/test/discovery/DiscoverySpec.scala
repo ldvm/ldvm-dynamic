@@ -1,48 +1,69 @@
 package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
-import discovery.components.{DummyVisualizer, JenaDataSource}
+import discovery.components.{DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
 import discovery.model.PortCheckResult.Status
 import discovery.model._
-import discovery.model.components.ComponentInstance
-import org.scalatest.LoneElement._
 import org.scalatest.concurrent.ScalaFutures._
+import org.scalatest.time.{Seconds, Hours, Span}
 
 class DiscoverySpec extends LdvmSpec {
-  "Discovery" should "discover dummy pipeline" in {
+  implicit val patienceConfig  = PatienceConfig(timeout = Span(10, Seconds))
+
+  "Discovery" should "discover pipeline from two matching components" in {
     val dummySource = new JenaDataSource(ModelFactory.createDefaultModel())
     val dummySuccessVisualizer = new DummyVisualizer(Status.Success)
 
-    val input = new DiscoveryInput(
-      Seq(dummySource),
-      Seq(dummySuccessVisualizer),
-      Seq()
+    val input = new DiscoveryInput(Seq(dummySource), Seq(dummySuccessVisualizer), Seq())
+    val pipelines = createDiscovery().discover(input).futureValue
+
+    assertContainsPipeline(
+      pipelines,
+      ExpectedPipeline(dummySuccessVisualizer, ExpectedBinding(dummySource, "PORT1", dummySuccessVisualizer))
     )
-
-    val future = createDiscovery().discover(input)
-
-    val pipeline = future.futureValue.loneElement
-    assertBindings(pipeline, ExpectedBinding(dummySource, "PORT1", dummySuccessVisualizer))
-    assertCorrectComponents(pipeline)
-    assertOutput(pipeline, dummySuccessVisualizer, DataSample())
+    pipelines should have size 1
   }
 
-
-  it should "discover nothing" in {
-
+  it should "discover nothing with two non-matching components" in {
     val dummySource = new JenaDataSource(ModelFactory.createDefaultModel())
     val dummySuccessVisualizer = new DummyVisualizer(Status.Failure)
 
-    val input = new DiscoveryInput(
-      Seq(dummySource),
-      Seq(dummySuccessVisualizer),
-      Seq()
-    )
+    val input = new DiscoveryInput(Seq(dummySource), Seq(dummySuccessVisualizer), Seq())
+    val pipelines = createDiscovery().discover(input).futureValue
 
-    val future = createDiscovery().discover(input)
-
-    future.futureValue shouldBe empty
+    pipelines shouldBe empty
   }
+
+  it should "discover two possible pipelines" in {
+    val sourceComponent = new JenaDataSource(ModelFactory.createDefaultModel())
+    val visualizerComponent1 = new DummyVisualizer(Status.Success)
+    val visualizerComponent2 = new DummyVisualizer(Status.Success)
+
+    val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent1, visualizerComponent2), Seq())
+    val pipelines = createDiscovery().discover(input).futureValue
+
+    assertContainsPipeline(
+      pipelines,
+      ExpectedPipeline(visualizerComponent1, ExpectedBinding(sourceComponent, "PORT1", visualizerComponent1))
+    )
+    assertContainsPipeline(
+      pipelines,
+      ExpectedPipeline(visualizerComponent2, ExpectedBinding(sourceComponent, "PORT1", visualizerComponent2))
+    )
+    pipelines should have size 2
+  }
+
+  ignore should "bind analyzer with two ports in correct order" in {
+    val sourceComponent = new JenaDataSource(ModelFactory.createDefaultModel())
+    val analyzerComponent = new DummyTwoPortAnalyzer()
+    val visualizerComponent = new DummyVisualizer(Status.Success)
+
+    val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent), Seq(analyzerComponent))
+    val pipelines = createDiscovery().discover(input).futureValue
+
+    pipelines.foreach(println)
+  }
+
 
   def createDiscovery(): Discovery = {
     val pipelineBuilder = new PipelineBuilder()
