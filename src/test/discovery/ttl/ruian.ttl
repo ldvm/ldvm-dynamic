@@ -1,0 +1,22 @@
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ruian:	<http://ruian.linked.opendata.cz/ontology/> .
+<http://ruian.linked.opendata.cz/resource/obce/500011>	rdf:type	ruian:Obec .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+<http://ruian.linked.opendata.cz/resource/obce/500011>	skos:notation	"500011" ;
+	ruian:definicniBod	<http://ruian.linked.opendata.cz/resource/obce/500011/multi-point/DOB.500011> ;
+	ruian:lau	<http://linked.opendata.cz/resource/region/500011> ;
+	ruian:okres	<http://ruian.linked.opendata.cz/resource/okresy/3705> ;
+	ruian:pou	<http://ruian.linked.opendata.cz/resource/pou/2933> .
+@prefix s:	<http://schema.org/> .
+<http://ruian.linked.opendata.cz/resource/obce/500011>	s:name	"\u017Delechovice nad D\u0159evnic\u00ED" .
+@prefix ogcgml:	<http://www.opengis.net/ont/gml#> .
+<http://ruian.linked.opendata.cz/resource/obce/500011/multi-point/DOB.500011>	rdf:type	ogcgml:MultiPoint ;
+	ogcgml:pointMember	<http://ruian.linked.opendata.cz/resource/obce/500011/multi-point/DOB.500011/point/DOB.500011.1> .
+<http://ruian.linked.opendata.cz/resource/obce/500011/multi-point/DOB.500011/point/DOB.500011.1>	rdf:type	ogcgml:Point ;
+	ogcgml:pos	"-515307.00 -1166521.00" .
+@prefix ns5:	<http://ruian.linked.opendata.cz/resource/obce/500011/multi-point/DOB.500011/point/DOB.500011.1/> .
+<http://ruian.linked.opendata.cz/resource/obce/500011/multi-point/DOB.500011/point/DOB.500011.1>	s:geo	ns5:wgs84 .
+<http://ruian.linked.opendata.cz/resource/pou/2933>	s:name	"Zl\u00EDn" .
+ns5:wgs84	rdf:type	s:GeoCoordinates ;
+	s:longitude	"17.747379847222223503422355861403048038482666015625" ;
+	s:latitude	"49.2180146805555551736688357777893543243408203125" .

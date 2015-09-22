@@ -1,0 +1,14 @@
+@prefix s: <http://schema.org/>	.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://example.org/resource/IPP>
+	s:geo <http://example.org/resource/IPP/geoPoint> ;
+	s:title "IPP title";
+	s:description "IPP description" ;
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/typSubjektu> <http://example.org/resource/IPP/type> .
+
+<http://example.org/resource/IPP/type> skos:prefLabel "IPP type" .
+
+<http://example.org/resource/IPP/geoPoint> a s:GeoCoordinates;
+				s:latitude "50.088433" ;
+				s:longitude "14.403422" .

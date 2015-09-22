@@ -1,0 +1,325 @@
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix ovm: <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix ovm-d: <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/> .
+@prefix s: <http://schema.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ruianlink: <http://ruian.linked.opendata.cz/ontology/links/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+	<http://linked.opendata.cz/resource/business-entity/CZ00088455> a gr:BusinessEntity , s:Organization ;
+		adms:identifier <http://linked.opendata.cz/resource/business-entity/CZ00088455/identifier/fromOvmDetail> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/SprvKrknNP/identifier/fromOvmList> .
+
+	<http://linked.opendata.cz/resource/business-entity/CZ75151537> a gr:BusinessEntity , s:Organization ;
+		adms:identifier <http://linked.opendata.cz/resource/business-entity/CZ75151537/identifier/fromOvmDetail> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/KRPUK/identifier/fromOvmList> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR> a gr:BusinessEntity , s:Organization , ovm:OVM ;
+		gr:legalName "Agentura ochrany přírody a krajiny České republiky" ;
+		s:name "Agentura ochrany přírody a krajiny České republiky" ;
+		skos:notation "AOPrrdKnCR" ;
+		ovm:typSubjektuText "Orgán státní správy" ;
+		ovm:stavSubjektu <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/StavSubjektu/1> ;
+		ovm:pravniForma <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/PravniForma/325> ;
+		ovm:primarniOvm "true"^^xsd:boolean ;
+		ovm:overeniSubjektem "true"^^xsd:boolean ;
+		ovm:datumOvereni "2012-02-01T15:31:57Z"^^xsd:dateTime ;
+		ovm:business-entity <http://linked.opendata.cz/resource/business-entity/CZ62933591> ;
+		s:address <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/address/fromOvmDetail> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/address/fromOvmList> ;
+		ovm:datovaSchranka <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/dkkdkdj> ;
+		s:contactPoint <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/email/fromOvmDetail/1> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/email/fromOvmList/1> ;
+		ovm:dalsiDatovaSchranka <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/ffydyjp> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/9ttdyj9> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/3hjdyhg> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/p89dyjj> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/kpddyvy> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/vvedyiy> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/zqmdynq> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/hwzdyhr> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/6npdyiv> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/ngbdyqr> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/f53dynz> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/qxcdynt> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/ahwdypi> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/bv4dyv5> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/w9kdyqm> ;
+		ovm:statutarniZastupce <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/persons/rndr.-franti%C5%A1ek-pelc> ;
+		s:employee <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/persons/rndr.-franti%C5%A1ek-pelc> ;
+		ovm:bankovniSpojeni <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/bankovni-spojeni/1> ;
+		ovm:www <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/www/1> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/www/2> ;
+		s:hasPOS <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/uradovna/1> ;
+		gr:hasPOS <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/uradovna/1> ;
+		rdfs:seeAlso <http://seznam.gov.cz/ovm/datafile.do?format=xml&service=seznamovm&id=AOPrrdKnCR> ;
+		ovm:typSubjektu <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypSubjektu/11> .
+
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/StavSubjektu/1> a skos:Concept , ovm:StavSubjektu ;
+		skos:notation "1" ;
+		skos:prefLabel "1" ;
+		skos:inScheme <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/StavSubjektu/ConceptScheme> .
+
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/PravniForma/325> a skos:Concept , ovm:PravniForma ;
+		skos:notation "325" ;
+		skos:prefLabel "Organizační složka státu" ;
+		skos:inScheme <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/PravniForma/ConceptScheme> .
+
+	<http://linked.opendata.cz/resource/business-entity/CZ62933591> a gr:BusinessEntity , s:Organization ;
+		adms:identifier <http://linked.opendata.cz/resource/business-entity/CZ62933591/identifier/fromOvmDetail> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/identifier/fromOvmList> .
+
+	<http://linked.opendata.cz/resource/business-entity/CZ62933591/identifier/fromOvmDetail> a adms:Identifier ;
+		skos:notation "62933591" ;
+		skos:prefLabel "62933591" ;
+		skos:inScheme <http://linked.opendata.cz/resource/concept-scheme/CZ-ICO> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/address/fromOvmDetail> a s:PostalAddress ;
+		s:streetAddress "Kaplanova 1931/1" ;
+		s:addressRegion "Hlavní město Praha" ;
+		s:addressLocality "Praha" ;
+		s:postalCode "14800" ;
+		ovm:kraj <http://ruian.linked.opendata.cz/resource/vusc/19> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/dkkdkdj> a ovm:DatovaSchranka ;
+		skos:notation "dkkdkdj" ;
+		skos:prefLabel "dkkdkdj" ;
+		ovm:stavDatoveSchranky <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/StavDatoveSchranky/1> ;
+		ovm:typDatoveSchranky <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypDatoveSchranky/OVM> .
+
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/StavDatoveSchranky/1> a skos:Concept , ovm:StavDatoveSchranky ;
+		skos:notation "1" ;
+		skos:prefLabel "1" ;
+		skos:inScheme <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/StavDatoveSchranky/ConceptScheme> .
+
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypDatoveSchranky/OVM> a skos:Concept , ovm:TypDatoveSchranky ;
+		skos:notation "OVM" ;
+		skos:prefLabel "OVM" ;
+		skos:inScheme <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypDatoveSchranky/ConceptScheme> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/email/fromOvmDetail/1> a s:ContactPoint ;
+		s:email "aopkcr@nature.cz" ;
+		ovm:typEmailu <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypEmailu/7> ;
+		ovm:officialEmail "false"^^xsd:boolean .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/ffydyjp> a ovm:DatovaSchranka ;
+		skos:notation "ffydyjp" ;
+		skos:prefLabel "Regionální pracoviště Střední Čechy (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/9ttdyj9> a ovm:DatovaSchranka ;
+		skos:notation "9ttdyj9" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Jeseníky (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/3hjdyhg> a ovm:DatovaSchranka ;
+		skos:notation "3hjdyhg" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Žďárské vrchy (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/p89dyjj> a ovm:DatovaSchranka ;
+		skos:notation "p89dyjj" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Český les (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/kpddyvy> a ovm:DatovaSchranka ;
+		skos:notation "kpddyvy" ;
+		skos:prefLabel "Regionální pracoviště Východní Čechy (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/vvedyiy> a ovm:DatovaSchranka ;
+		skos:notation "vvedyiy" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Beskydy (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/zqmdynq> a ovm:DatovaSchranka ;
+		skos:notation "zqmdynq" ;
+		skos:prefLabel "Regionální pracoviště Liberecko (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/hwzdyhr> a ovm:DatovaSchranka ;
+		skos:notation "hwzdyhr" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Litovelské Pomoraví (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/6npdyiv> a ovm:DatovaSchranka ;
+		skos:notation "6npdyiv" ;
+		skos:prefLabel "Regionální pracoviště Ústecko (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/ngbdyqr> a ovm:DatovaSchranka ;
+		skos:notation "ngbdyqr" ;
+		skos:prefLabel "Regionální pracoviště Jižní Morava (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/f53dynz> a ovm:DatovaSchranka ;
+		skos:notation "f53dynz" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Bílé Karpaty (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/qxcdynt> a ovm:DatovaSchranka ;
+		skos:notation "qxcdynt" ;
+		skos:prefLabel "Regionální pracoviště Jižní Čechy (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/ahwdypi> a ovm:DatovaSchranka ;
+		skos:notation "ahwdypi" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Kokořínsko - Máchův kraj (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/bv4dyv5> a ovm:DatovaSchranka ;
+		skos:notation "bv4dyv5" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Poodří (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/w9kdyqm> a ovm:DatovaSchranka ;
+		skos:notation "w9kdyqm" ;
+		skos:prefLabel "Regionální pracoviště Správa CHKO Slavkovský les (Agentura ochrany přírody a krajiny České republiky)" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/persons/rndr.-franti%C5%A1ek-pelc> a foaf:Person , s:Person ;
+		foaf:givenName "František" ;
+		s:givenName "František" ;
+		foaf:familyName "Pelc" ;
+		s:familyName "Pelc" ;
+		foaf:title "RNDr." ;
+		s:honorificPrefix "RNDr." .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/bankovni-spojeni/1> a ovm:BankovniSpojeni ;
+		dcterms:title "18228011/0710" ;
+		ovm:cisloUctu "18228011/0710" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/www/1> a ovm:WWW ;
+		s:name <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypWWW/21> ;
+		s:url "http://www.ochranaprirody.cz/wps/portal/cs/aopkcr/aopk-cr/!ut/p/c5/vZLLboJAGIWfpQ_QzAxXWQ4wXOUmgyAbAyoqKFBUUJ6-Jl10pd1Y_7M8yfnyJT9IwT111u-32Xnf1NkBJCAVlt40kHiN56BOWR6adsRiOVIYOIEgBgnklmF5a82xGmclHBg6LiAVyeCoZKA0urqqh0ICGUpOoysSSKmDTqpsopWE5lpAMKnTOGo-7lvpM5rO_tGjnx4-OAzBAqTiYxsE6AttnrPY97E8-I8sTyUImsqcCSxdQLr8Ti_-pSwLpNtDk99_Pk5Ww1VtnEE1k91plLmSsqxlz6cptvdkFXqlRpqWkeZul_fFxFeN_sJuWIhxnsTBjrdD7QuX3dSWDzN3JiizukDUEpSKax2u7znOsCTcGbElFMNa9fRbkqdi1g2-2_lVxfvVZVqf959L_eLwa2lITjovlMA1muMGtMe-JYX7Gw5_fANuWW_6/dl3/d3/L2dBISEvZ0FBIS9nQSEh/" .
+
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypWWW/21> a skos:Concept , ovm:TypWWW ;
+		skos:notation "21" ;
+		skos:prefLabel "organizační struktura" ;
+		skos:inScheme <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypWWW/ConceptScheme> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/www/2> a ovm:WWW ;
+		s:name <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypWWW/1> ;
+		s:url "www.nature.cz" .
+
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypWWW/1> a skos:Concept , ovm:TypWWW ;
+		skos:notation "1" ;
+		skos:prefLabel "oficiální" ;
+		skos:inScheme <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypWWW/ConceptScheme> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/uradovna/1> a s:Place , gr:Location ;
+		s:name "Agentura ochrany přírody a krajiny České republiky" ;
+		s:address <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/uradovna/1/address> ;
+		gr:openingHoursSpecification <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/uradovna/1/opening-hours/1> ;
+		s:openingHoursSpecification <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/uradovna/1/opening-hours/1> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/uradovna/1/address> a s:PostalAddress ;
+		s:streetAddress "Kaplanova 1931/1" ;
+		s:addressRegion "Hlavní město Praha" ;
+		s:addressLocality "Praha 11" ;
+		s:postalCode "14800" ;
+		ovm:kraj <http://ruian.linked.opendata.cz/resource/vusc/19> ;
+		ruianlink:adresni-misto <http://ruian.linked.opendata.cz/resource/adresni-mista/21844895> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/AOPrrdKnCR/uradovna/1/opening-hours/1> a s:OpeningHoursSpecification , gr:OpeningHoursSpecification ;
+		gr:hasOpeningHoursDayOfWeek gr:Monday ;
+		s:dayOfWeek gr:Monday ;
+		s:opens "08:30:00"^^xsd:time ;
+		gr:opens "08:30:00"^^xsd:time ;
+		s:closes "17:00:00"^^xsd:time ;
+		gr:closes "17:00:00"^^xsd:time .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst> a gr:BusinessEntity , s:Organization , ovm:OVM ;
+		gr:legalName "Agentura pro podporu podnikání a investic CzechInvest" ;
+		s:name "Agentura pro podporu podnikání a investic CzechInvest" ;
+		skos:notation "ACzchInvst" ;
+		ovm:typSubjektuText "PO zřízená ze zákona" ;
+		ovm:stavSubjektu <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/StavSubjektu/1> ;
+		ovm:pravniForma <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/PravniForma/332> ;
+		ovm:primarniOvm "true"^^xsd:boolean ;
+		ovm:overeniSubjektem "true"^^xsd:boolean ;
+		ovm:datumOvereni "2015-02-13T10:09:15Z"^^xsd:dateTime ;
+		ovm:business-entity <http://linked.opendata.cz/resource/business-entity/CZ71377999> ;
+		s:address <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/address/fromOvmDetail> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/address/fromOvmList> ;
+		ovm:datovaSchranka <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/cyrj9gf> ;
+		ovm:statutarniZastupce <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/persons/mgr.%20ing.-karel-ku%C4%8Dera> ;
+		s:employee <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/persons/mgr.%20ing.-karel-ku%C4%8Dera> ;
+		ovm:bankovniSpojeni <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/bankovni-spojeni/1> ;
+		ovm:www <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/www/1> ;
+		s:hasPOS <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1> ;
+		gr:hasPOS <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1> ;
+		rdfs:seeAlso <http://seznam.gov.cz/ovm/datafile.do?format=xml&service=seznamovm&id=ACzchInvst> ;
+		ovm:typSubjektu <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypSubjektu/17> .
+
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/PravniForma/332> a skos:Concept , ovm:PravniForma ;
+		skos:notation "332" ;
+		skos:prefLabel "Státní příspěvková organizace" ;
+		skos:inScheme <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/PravniForma/ConceptScheme> .
+
+	<http://linked.opendata.cz/resource/business-entity/CZ71377999> a gr:BusinessEntity , s:Organization ;
+		adms:identifier <http://linked.opendata.cz/resource/business-entity/CZ71377999/identifier/fromOvmDetail> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/identifier/fromOvmList> .
+
+	<http://linked.opendata.cz/resource/business-entity/CZ71377999/identifier/fromOvmDetail> a adms:Identifier ;
+		skos:notation "71377999" ;
+		skos:prefLabel "71377999" ;
+		skos:inScheme <http://linked.opendata.cz/resource/concept-scheme/CZ-ICO> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/address/fromOvmDetail> a s:PostalAddress ;
+		s:streetAddress "Štěpánská 567/15" ;
+		s:addressRegion "Hlavní město Praha" ;
+		s:addressLocality "Praha" ;
+		s:postalCode "12000" ;
+		ovm:kraj <http://ruian.linked.opendata.cz/resource/vusc/19> ;
+		ruianlink:adresni-misto <http://ruian.linked.opendata.cz/resource/adresni-mista/21731446> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/datove-schranky/cyrj9gf> a ovm:DatovaSchranka ;
+		skos:notation "cyrj9gf" ;
+		skos:prefLabel "cyrj9gf" ;
+		ovm:stavDatoveSchranky <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/StavDatoveSchranky/1> ;
+		ovm:typDatoveSchranky <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypDatoveSchranky/PO_ZAK> .
+
+	<http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypDatoveSchranky/PO_ZAK> a skos:Concept , ovm:TypDatoveSchranky ;
+		skos:notation "PO_ZAK" ;
+		skos:prefLabel "PO_ZAK" ;
+		skos:inScheme <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypDatoveSchranky/ConceptScheme> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/persons/mgr.%20ing.-karel-ku%C4%8Dera> a foaf:Person , s:Person ;
+		foaf:givenName "Karel" ;
+		s:givenName "Karel" ;
+		foaf:familyName "Kučera" ;
+		s:familyName "Kučera" ;
+		foaf:title "Mgr. Ing." ;
+		s:honorificPrefix "Mgr. Ing." ;
+		ovm:funkce "generální ředitel" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/bankovni-spojeni/1> a ovm:BankovniSpojeni ;
+		dcterms:title "84 63 90 11/0100" ;
+		ovm:cisloUctu "84 63 90 11/0100" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/www/1> a ovm:WWW ;
+		s:name <http://linked.opendata.cz/ontology/domain/seznam.gov.cz/ovm/TypWWW/21> ;
+		s:url "www.czechivnest.org" .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1> a s:Place , gr:Location ;
+		s:name "Agentura pro podporu podnikání a investic CzechInvest" ;
+		s:address <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/address> ;
+		gr:openingHoursSpecification <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/1> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/2> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/3> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/4> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/5> ;
+		s:openingHoursSpecification <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/1> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/2> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/3> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/4> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/5> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/address> a s:PostalAddress ;
+		s:streetAddress "Štěpánská 567/15" ;
+		s:addressRegion "Hlavní město Praha" ;
+		s:addressLocality "Praha 2" ;
+		s:postalCode "12000" ;
+		ovm:kraj <http://ruian.linked.opendata.cz/resource/vusc/19> .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/1> a s:OpeningHoursSpecification , gr:OpeningHoursSpecification ;
+		gr:hasOpeningHoursDayOfWeek gr:Monday ;
+		s:dayOfWeek gr:Monday ;
+		s:opens "09:00:00"^^xsd:time ;
+		gr:opens "09:00:00"^^xsd:time ;
+		s:closes "13:00:00"^^xsd:time ;
+		gr:closes "13:00:00"^^xsd:time .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/2> a s:OpeningHoursSpecification , gr:OpeningHoursSpecification ;
+		gr:hasOpeningHoursDayOfWeek gr:Tuesday ;
+		s:dayOfWeek gr:Tuesday ;
+		s:opens "09:00:00"^^xsd:time ;
+		gr:opens "09:00:00"^^xsd:time ;
+		s:closes "13:00:00"^^xsd:time ;
+		gr:closes "13:00:00"^^xsd:time .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/3> a s:OpeningHoursSpecification , gr:OpeningHoursSpecification ;
+		gr:hasOpeningHoursDayOfWeek gr:Wednesday ;
+		s:dayOfWeek gr:Wednesday ;
+		s:opens "09:00:00"^^xsd:time ;
+		gr:opens "09:00:00"^^xsd:time ;
+		s:closes "13:00:00"^^xsd:time ;
+		gr:closes "13:00:00"^^xsd:time .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/4> a s:OpeningHoursSpecification , gr:OpeningHoursSpecification ;
+		gr:hasOpeningHoursDayOfWeek gr:Thursday ;
+		s:dayOfWeek gr:Thursday ;
+		s:opens "09:00:00"^^xsd:time ;
+		gr:opens "09:00:00"^^xsd:time ;
+		s:closes "13:00:00"^^xsd:time ;
+		gr:closes "13:00:00"^^xsd:time .
+
+	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/ACzchInvst/uradovna/1/opening-hours/5> a s:OpeningHoursSpecification , gr:OpeningHoursSpecification ;
+		gr:hasOpeningHoursDayOfWeek gr:Friday ;
+		s:dayOfWeek gr:Friday ;
+		s:opens "09:00:00"^^xsd:time ;
+		gr:opens "09:00:00"^^xsd:time ;
+		s:closes "13:00:00"^^xsd:time ;
+		gr:closes "13:00:00"^^xsd:time .

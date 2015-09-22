@@ -1,0 +1,28 @@
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix s:	<http://schema.org/> .
+@prefix ogcgml:	<http://www.opengis.net/ont/gml#> .
+
+@prefix ruian:	<http://ruian.linked.opendata.cz/ontology/> .
+
+<http://ruian.linked.opendata.cz/resource/obce/554782>
+	rdf:type	ruian:Obec ;
+	skos:notation	"554782" ;
+	s:name	"Praha" ;
+	ruian:definicniBod	<http://ruian.linked.opendata.cz/resource/obce/554782/multi-point/DOB.554782> ;
+	ruian:lau	<http://linked.opendata.cz/resource/region/554782> ;
+	ruian:okres	<http://ruian.linked.opendata.cz/resource/okresy/3100> ;
+	ruian:pou	<http://ruian.linked.opendata.cz/resource/pou/19> ;
+	.
+
+<http://ruian.linked.opendata.cz/resource/obce/554782/multi-point/DOB.554782>	rdf:type	ogcgml:MultiPoint ;
+	ogcgml:pointMember	<http://ruian.linked.opendata.cz/resource/obce/554782/multi-point/DOB.554782/point/DOB.554782.1> .
+
+<http://ruian.linked.opendata.cz/resource/obce/554782/multi-point/DOB.554782/point/DOB.554782.1>	rdf:type	ogcgml:Point ;
+	ogcgml:pos	"-743100.00 -1043300.00" ;
+	s:geo <http://ruian.linked.opendata.cz/resource/obce/554782/multi-point/DOB.554782/point/DOB.554782.1/wgs84> .
+
+<http://ruian.linked.opendata.cz/resource/obce/554782/multi-point/DOB.554782/point/DOB.554782.1/wgs84>	rdf:type	s:GeoCoordinates ;
+	s:longitude	"14.417780627777776913944762782193720340728759765625" ;
+	s:latitude	"50.084552136111113895822199992835521697998046875" .

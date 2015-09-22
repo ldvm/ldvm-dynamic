@@ -8,7 +8,7 @@ import scala.concurrent.Future
 
 class GoogleMapsVisualizer extends VisualizerInstance {
 
-  private val inputPort = Port("INPUT", 0)
+  private val inputPort = Port("PORT1", 0)
 
   private val descriptors = Seq(
     AskDescriptor(
