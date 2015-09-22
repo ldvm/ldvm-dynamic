@@ -13,7 +13,7 @@ import org.scalatest.time.{Seconds, Span}
 class RealPipelinesSpec extends LdvmSpec {
 
   var ttlPath = "test/discovery/ttl/"
-  implicit val patienceConfig = PatienceConfig(scaled(Span(1, Seconds)))
+  implicit val patienceConfig = PatienceConfig(scaled(Span(10, Seconds)))
 
   "Discovery" should "discover LDOW 2015 pipeline" in {
 
@@ -29,20 +29,16 @@ class RealPipelinesSpec extends LdvmSpec {
       Seq(townsExtractor, ruianGeocoder)
     )
 
-    val future = createDiscovery().discover(input)
+    val pipelines = createDiscovery().discover(input).futureValue
 
-    val pipeline = future.futureValue.loneElement
-    assertBindings(
-      pipeline,
+    assertContainsPipeline(pipelines, ExpectedPipeline(
+      googleMaps,
       ExpectedBinding(ruian, "PORT1", townsExtractor),
       ExpectedBinding(townsExtractor, "PORT1", ruianGeocoder),
       ExpectedBinding(institutions, "PORT2", ruianGeocoder),
       ExpectedBinding(ruianGeocoder, "PORT1", googleMaps)
-    )
-
-    assertCorrectComponents(pipeline)
-    assertOutput(pipeline, googleMaps, RdfDataSample(""))
-
+    ))
+    pipelines should have size 1
   }
 
 }

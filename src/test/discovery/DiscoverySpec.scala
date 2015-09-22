@@ -1,14 +1,16 @@
 package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
-import discovery.components.{DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
+import discovery.components.DummyTwoPortAnalyzer
+import discovery.components.datasource.JenaDataSource
+import discovery.components.visualizer.DummyVisualizer
 import discovery.model.PortCheckResult.Status
 import discovery.model._
 import org.scalatest.concurrent.ScalaFutures._
-import org.scalatest.time.{Seconds, Hours, Span}
+import org.scalatest.time.{Seconds, Span}
 
 class DiscoverySpec extends LdvmSpec {
-  implicit val patienceConfig  = PatienceConfig(timeout = Span(10, Seconds))
+  implicit val patienceConfig  = PatienceConfig(timeout = scaled(Span(10, Seconds)))
 
   "Discovery" should "discover pipeline from two matching components" in {
     val dummySource = new JenaDataSource(ModelFactory.createDefaultModel())
@@ -63,11 +65,4 @@ class DiscoverySpec extends LdvmSpec {
 
     pipelines.foreach(println)
   }
-
-
-  def createDiscovery(): Discovery = {
-    val pipelineBuilder = new PipelineBuilder()
-    new Discovery(new DiscoveryPortMatcher(pipelineBuilder), pipelineBuilder)
-  }
-
 }

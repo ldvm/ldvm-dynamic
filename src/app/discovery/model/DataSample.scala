@@ -19,6 +19,14 @@ trait DataSample {
 
 }
 
+case object EmptyDataSample extends DataSample{
+  override def executeAsk(query: AskDescriptor): Future[Boolean] = Future.successful(false)
+
+  override def executeConstruct(query: ConstructDescriptor): Future[Boolean] = Future.successful(false)
+
+  override def executeSelect(query: SelectDescriptor): Future[Boolean] = Future.successful(false)
+}
+
 case class RdfDataSample(rdfData: String) extends  DataSample {
 
   override def executeAsk(descriptor: AskDescriptor) : Future[Boolean] = Future.successful {

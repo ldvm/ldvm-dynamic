@@ -1,9 +1,10 @@
 package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
-import discovery.components.{DummyVisualizer, JenaDataSource}
+import discovery.components.datasource.JenaDataSource
+import discovery.components.visualizer.DummyVisualizer
 import discovery.model.PortCheckResult.Status
-import discovery.model.{DataSample, Pipeline, PipelineComponent, PortBinding}
+import discovery.model._
 import org.scalatest.exceptions.TestFailedException
 
 class PipelineAssertsSpec extends LdvmSpec {
@@ -20,7 +21,7 @@ class PipelineAssertsSpec extends LdvmSpec {
     Seq(sourceComponent, visualizerComponent),
     Seq(PortBinding(sourceComponent, expectedVisualizer.port, visualizerComponent)),
     visualizerComponent,
-    DataSample()
+    EmptyDataSample
   )
 
   "assertContainsPipeline" should "pass with expected pipeline" in {
@@ -42,7 +43,7 @@ class PipelineAssertsSpec extends LdvmSpec {
   }
 
   ignore should "fail with nonempty data sample" in {
-    val pipeline = validPipeline.copy(lastOutputDataSample = DataSample())
+    val pipeline = validPipeline.copy(lastOutputDataSample = EmptyDataSample)
     failsWithMessage(Seq(pipeline), "did not end with empty data sample")
   }
 

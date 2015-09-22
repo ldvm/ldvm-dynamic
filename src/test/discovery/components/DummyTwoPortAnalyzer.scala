@@ -1,8 +1,9 @@
 package discovery.components
 
 import discovery.model.PortCheckResult.Status
-import discovery.model.{PortCheckResult, DataSample, ComponentState, Port}
+import discovery.model._
 import discovery.model.components.AnalyzerInstance
+import discovery.model.components.descriptor.Descriptor
 
 import scala.concurrent.Future
 
@@ -15,7 +16,7 @@ class DummyTwoPortAnalyzer extends AnalyzerInstance {
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]) = {
     assert(state.contains(port2BoundState))
-    Future.successful(DataSample())
+    Future.successful(RdfDataSample(""))
   }
 
   override def checkPort(port: Port, state: Option[ComponentState], outputDataSample: DataSample): Future[PortCheckResult] = {
@@ -31,4 +32,9 @@ class DummyTwoPortAnalyzer extends AnalyzerInstance {
   }
 
   override val getInputPorts: Seq[Port] = Seq(port1, port2)
+
+  override val getDescriptorsByPort: Map[Port, Seq[Descriptor]] = Map(
+    port1 -> Seq(),
+    port2 -> Seq()
+  )
 }

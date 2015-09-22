@@ -1,12 +1,10 @@
 package discovery
 
 import discovery.model.components.ComponentInstance
-import discovery.model.{DataSample, Pipeline}
+import discovery.model.{EmptyDataSample, DataSample, Pipeline}
 import org.scalatest.Assertions._
 
 trait PipelineAsserts {
-  private val emptyDataSample = DataSample()
-
   case class ExpectedPipeline(lastComponent: ComponentInstance, bindings: ExpectedBinding*)
 
   case class ExpectedBinding(startComponent: ComponentInstance, portName: String, endComponent: ComponentInstance)
@@ -47,7 +45,7 @@ trait PipelineAsserts {
   }
 
   private def assertEndsWithEmptyDataSample(pipeline: Pipeline): Unit = {
-    if (emptyDataSample != pipeline.lastOutputDataSample) {
+    if (EmptyDataSample != pipeline.lastOutputDataSample) {
       fail(s"Pipeline $pipeline did not end with empty data sample")
     }
   }
