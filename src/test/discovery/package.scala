@@ -21,4 +21,8 @@ package object discovery extends LdvmSpec {
     pipeline.lastComponent.componentInstance shouldBe expectedLastComponent
     pipeline.lastOutputDataSample shouldBe expectedDataSample
   }
+
+  def createDiscovery(): Discovery = {
+    new Discovery(new DiscoveryPortMatcher(new PipelineBuilder()))
+  }
 }

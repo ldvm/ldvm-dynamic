@@ -1,4 +1,4 @@
-package discovery.components
+package discovery.components.visualizer
 
 import discovery.model._
 import discovery.model.components.VisualizerInstance

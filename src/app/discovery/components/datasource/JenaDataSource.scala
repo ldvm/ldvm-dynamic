@@ -1,8 +1,8 @@
-package discovery.components
+package discovery.components.datasource
 
 import com.hp.hpl.jena.rdf.model.Model
 import discovery.model.components.DataSourceInstance
-import discovery.model.{DataSample, Port, ComponentState}
+import discovery.model.{ComponentState, DataSample, Port}
 
 import scala.concurrent.Future
 

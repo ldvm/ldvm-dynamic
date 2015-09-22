@@ -1,11 +1,11 @@
-package discovery.components
+package discovery.components.analyzer
 
-import discovery.model.components.TransformerInstance
 import discovery.model._
+import discovery.model.components.AnalyzerInstance
 
 import scala.concurrent.Future
 
-class PopulationTransformer extends TransformerInstance {
+class Linker extends AnalyzerInstance{
   override def checkPort(port: Port, state: Option[ComponentState], outputDataSample: DataSample): Future[PortCheckResult] = ???
 
   override def getInputPorts: Seq[Port] = ???
