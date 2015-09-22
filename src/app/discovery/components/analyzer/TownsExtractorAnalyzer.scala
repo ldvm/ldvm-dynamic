@@ -48,7 +48,7 @@ class TownsExtractorAnalyzer extends AnalyzerInstance {
   )
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
-    val source = Source.fromFile("src/test/discovery/ttl/ldvm-ruian-obce-datasample.ttl")
+    val source = Source.fromFile("test/discovery/ttl/ldvm-ruian-obce-datasample.ttl")
     val content = try source.getLines().mkString finally source.close()
     Future.successful(RdfDataSample(content))
   }
