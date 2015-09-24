@@ -4,11 +4,11 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import discovery.model._
 import discovery.model.components.{DataSourceInstance, VisualizerInstance, ComponentInstance, ProcessorInstance}
-import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.Future
 
-class PipelineBuilder {
+import scala.concurrent.{ExecutionContext, Future}
+
+class PipelineBuilder(implicit executor : ExecutionContext) {
   val pipelineComponentCounter: AtomicInteger = new AtomicInteger()
 
   def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch]): Future[Pipeline] = {

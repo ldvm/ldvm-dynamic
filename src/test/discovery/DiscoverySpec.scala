@@ -5,7 +5,8 @@ import discovery.components.{DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSour
 import discovery.model.PortCheckResult.Status
 import discovery.model._
 import org.scalatest.concurrent.ScalaFutures._
-import org.scalatest.time.{Seconds, Hours, Span}
+import org.scalatest.time.{Seconds, Span}
+import play.api.libs.concurrent.Execution.Implicits._
 
 class DiscoverySpec extends LdvmSpec {
   implicit val patienceConfig  = PatienceConfig(timeout = Span(10, Seconds))
@@ -63,11 +64,4 @@ class DiscoverySpec extends LdvmSpec {
 
     pipelines.foreach(println)
   }
-
-
-  def createDiscovery(): Discovery = {
-    val pipelineBuilder = new PipelineBuilder()
-    new Discovery(new DiscoveryPortMatcher(pipelineBuilder), pipelineBuilder)
-  }
-
 }

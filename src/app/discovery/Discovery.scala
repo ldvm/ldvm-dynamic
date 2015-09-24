@@ -3,11 +3,10 @@ package discovery
 import discovery.model._
 import discovery.model.components.DataSourceInstance
 import discovery.model.internal.IterationData
-import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuilder) {
+class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuilder)(implicit executor : ExecutionContext) {
 
   val MAX_ITERATIONS = 10
 

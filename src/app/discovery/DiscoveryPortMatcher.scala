@@ -2,12 +2,11 @@ package discovery
 
 import discovery.model.PortCheckResult.Status
 import discovery.model._
-import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs, ProcessorInstance}
-import play.api.libs.concurrent.Execution.Implicits._
+import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
+class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor : ExecutionContext) {
 
   def tryMatchPorts(componentInstance: ComponentInstanceWithInputs, givenPipelines: Seq[Pipeline]): Future[Seq[Pipeline]] = {
     val ports = componentInstance.getInputPorts.sortBy(_.priority)
@@ -36,7 +35,7 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
         state <- lastStates
       ) yield {
         val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
-        eventualCheckResult.collect {
+        eventualCheckResult.map {
           case c: PortCheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
           case _ => None
         }
