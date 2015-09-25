@@ -6,11 +6,8 @@ import discovery.model.PortCheckResult.Status
 import discovery.model._
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.time.{Seconds, Span}
-import play.api.libs.concurrent.Execution.Implicits._
 
-class DiscoverySpec extends LdvmSpec {
-  implicit val patienceConfig  = PatienceConfig(timeout = Span(10, Seconds))
-
+class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
   "Discovery" should "discover pipeline from two matching components" in {
     val dummySource = new JenaDataSource(ModelFactory.createDefaultModel())
     val dummySuccessVisualizer = new DummyVisualizer(Status.Success)

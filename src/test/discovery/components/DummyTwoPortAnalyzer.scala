@@ -10,8 +10,8 @@ class DummyTwoPortAnalyzer extends AnalyzerInstance {
   val port1 = Port("PORT1", 1)
   val port2 = Port("PORT2", 2)
 
-  val port1BoundState = ComponentState("port 1 bound")
-  val port2BoundState = ComponentState("port 1 & 2 bound")
+  private val port1BoundState = ComponentState("port 1 bound")
+  private val port2BoundState = ComponentState("port 1 & 2 bound")
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]) = {
     assert(state.contains(port2BoundState))

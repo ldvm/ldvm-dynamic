@@ -39,7 +39,8 @@ class PipelineBuilder(implicit executor : ExecutionContext) {
   }
 
   private def pipelineComponents(portMatches: Seq[PortMatch], newLastComponent: PipelineComponent): Seq[PipelineComponent] = {
-    portMatches.flatMap(_.startPipeline.components) :+ newLastComponent
+    val startPipelinesComponents: Seq[PipelineComponent] = portMatches.flatMap(_.startPipeline.components).distinct
+    if (startPipelinesComponents.contains(newLastComponent)) startPipelinesComponents else startPipelinesComponents :+ newLastComponent
   }
 
   private def pipelineBindings(portMatches: Seq[PortMatch], newLastComponent: PipelineComponent): Seq[PortBinding] = {
