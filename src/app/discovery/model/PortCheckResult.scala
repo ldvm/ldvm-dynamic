@@ -6,7 +6,7 @@ object PortCheckResult {
 
   object Status extends Enumeration {
     type Status = Value
-    val Success, Failure = Value
+    val Success, Failure, Error = Value
   }
 
 }

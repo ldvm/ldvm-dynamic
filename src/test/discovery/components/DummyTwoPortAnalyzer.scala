@@ -27,6 +27,7 @@ class DummyTwoPortAnalyzer extends AnalyzerInstance {
         else
           PortCheckResult(Status.Failure)
       }
+      case _ => Future.successful(PortCheckResult(Status.Error))
     }
   }
 
