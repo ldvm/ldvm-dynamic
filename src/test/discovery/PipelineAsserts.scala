@@ -11,14 +11,14 @@ trait PipelineAsserts {
 
   case class ExpectedBinding(startComponent: ComponentInstance, portName: String, endComponent: ComponentInstance)
 
-  def assertContainsPipeline(actualPipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline): Unit = {
+  def assertContainsPipeline(actualPipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline, expectedDataSample: DataSample = emptyDataSample): Unit = {
     val pipelinesWithExpectedBindings = assertHasExpectedBindings(actualPipelines, expectedPipeline)
 
     val pipelinesWithExpectedLastComponent = assertHasLastComponent(pipelinesWithExpectedBindings, expectedPipeline)
 
     val matchingPipeline: Pipeline = assertSingleMatchingPipeline(pipelinesWithExpectedLastComponent, expectedPipeline)
 
-    assertEndsWithEmptyDataSample(matchingPipeline)
+    assertEndsWithEmptyDataSample(matchingPipeline, expectedDataSample)
     assertUniquePipelineComponents(matchingPipeline)
     assertNoUnboundComponents(matchingPipeline)
   }
@@ -26,7 +26,7 @@ trait PipelineAsserts {
   private def assertHasExpectedBindings(pipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline): Seq[Pipeline] = {
     val pipelinesWithExpectedBindings = pipelines.filter(hasExpectedBindings(expectedPipeline.bindings))
     if (pipelinesWithExpectedBindings.isEmpty) {
-      fail(s"Given pipelines $pipelines did not contain pipeline with expected bindings ${expectedPipeline.bindings}")
+      fail(s"Given pipelines $pipelines\n\tdid not contain pipeline with expected bindings ${expectedPipeline.bindings}")
     }
     pipelinesWithExpectedBindings
   }
@@ -34,28 +34,28 @@ trait PipelineAsserts {
   private def assertHasLastComponent(pipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline): Seq[Pipeline] = {
     val pipelinesWithExpectedLastComponent = pipelines.filter(_.lastComponent.componentInstance == expectedPipeline.lastComponent)
     if (pipelinesWithExpectedLastComponent.isEmpty) {
-      fail(s"None of pipelines $pipelines has expected last component ${expectedPipeline.lastComponent}")
+      fail(s"None of pipelines $pipelines\n\t has expected last component ${expectedPipeline.lastComponent}")
     }
     pipelinesWithExpectedLastComponent
   }
 
   private def assertSingleMatchingPipeline(pipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline): Pipeline = {
     if (pipelines.size > 1) {
-      fail(s"Multiple pipelines matching expected pipeline $expectedPipeline found: $pipelines")
+      fail(s"Multiple pipelines matching expected pipeline $expectedPipeline found:\n\t $pipelines")
     }
     pipelines.head
   }
 
-  private def assertEndsWithEmptyDataSample(pipeline: Pipeline): Unit = {
-    if (emptyDataSample != pipeline.lastOutputDataSample) {
-      fail(s"Pipeline $pipeline did not end with empty data sample")
+  private def assertEndsWithEmptyDataSample(pipeline: Pipeline, expectedDataSample: DataSample): Unit = {
+    if (expectedDataSample != pipeline.lastOutputDataSample) {
+      fail(s"Pipeline $pipeline\n\t did not end with expected data sample $expectedDataSample")
     }
   }
 
   private def assertUniquePipelineComponents(pipeline: Pipeline): Unit = {
     val hasUniqueComponents = pipeline.components.map(_.id).toSet.size == pipeline.components.size
     if (!hasUniqueComponents) {
-      fail(s"Pipeline $pipeline does not have all components unique: ${pipeline.components}")
+      fail(s"Pipeline $pipeline\n\t does not have all components unique: ${pipeline.components}")
     }
   }
 
@@ -64,7 +64,7 @@ trait PipelineAsserts {
       .flatMap { b => Seq(b.startComponent, b.endComponent) }
       .toSet
     if (pipeline.components.toSet != boundComponents) {
-      fail(s"Pipeline $pipeline contains unbound components")
+      fail(s"Pipeline $pipeline\n\t contains unbound components")
     }
   }
 
