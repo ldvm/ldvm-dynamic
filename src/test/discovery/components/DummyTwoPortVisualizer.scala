@@ -2,6 +2,7 @@ package discovery.components
 
 import discovery.model.PortCheckResult.Status
 import discovery.model.components.VisualizerInstance
+import discovery.model.components.descriptor.Descriptor
 import discovery.model.{ComponentState, DataSample, Port, PortCheckResult}
 
 import scala.concurrent.Future
@@ -15,4 +16,6 @@ class DummyTwoPortVisualizer extends VisualizerInstance {
   }
 
   override val getInputPorts = Seq(port1, port2)
+
+  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = Map(port1 -> Seq(), port2 -> Seq())
 }

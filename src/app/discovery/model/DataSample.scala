@@ -1,11 +1,8 @@
 package discovery.model
 
-import java.io.ByteArrayInputStream
-
 import com.hp.hpl.jena.query.{QueryExecutionFactory, QueryFactory}
-import com.hp.hpl.jena.rdf.model.ModelFactory
 import discovery.JenaUtil
-import discovery.model.components.descriptor.{AskDescriptor, SelectDescriptor, ConstructDescriptor}
+import discovery.model.components.descriptor.{AskDescriptor, ConstructDescriptor, SelectDescriptor}
 
 import scala.concurrent.Future
 
@@ -28,7 +25,6 @@ case object EmptyDataSample extends DataSample{
 }
 
 case class RdfDataSample(rdfData: String) extends  DataSample {
-
   override def executeAsk(descriptor: AskDescriptor) : Future[Boolean] = Future.successful {
     val model = JenaUtil.modelFromTtl(rdfData)
     val jenaQuery = QueryFactory.create(descriptor.query)

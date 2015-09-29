@@ -3,6 +3,7 @@ package discovery.components
 import discovery.model.PortCheckResult.Status.Status
 import discovery.model._
 import discovery.model.components.VisualizerInstance
+import discovery.model.components.descriptor.Descriptor
 
 import scala.concurrent.Future
 
@@ -15,4 +16,6 @@ class DummyVisualizer(expectedPortCheckResult: Status) extends VisualizerInstanc
   }
 
   override def getInputPorts = Seq(port)
+
+  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = Map(port -> Seq())
 }

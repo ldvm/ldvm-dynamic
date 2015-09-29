@@ -1,7 +1,8 @@
 package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
-import discovery.components.{DummyTransformer, DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
+import discovery.components.datasource.JenaDataSource
+import discovery.components.{DummyTransformer, DummyTwoPortAnalyzer, DummyVisualizer}
 import discovery.model.PortCheckResult.Status
 import discovery.model._
 import org.scalatest.concurrent.ScalaFutures._

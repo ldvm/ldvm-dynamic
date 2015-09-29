@@ -5,8 +5,6 @@ import discovery.model.{DataSample, Pipeline, _}
 import org.scalatest.Assertions._
 
 trait PipelineAsserts {
-  private val emptyDataSample = DataSample()
-
   case class ExpectedPipeline(lastComponent: ComponentInstance, bindings: ExpectedBinding*)
 
   case class ExpectedBinding(startComponent: ComponentInstance, portName: String, endComponent: ComponentInstance)
@@ -16,7 +14,7 @@ trait PipelineAsserts {
   }
 
   implicit class PipelineAssertsWrapper(actualPipelines: Seq[Pipeline]) {
-    def shouldContainPipeline(expectedPipeline: ExpectedPipeline, expectedDataSample: DataSample = emptyDataSample): Unit = {
+    def shouldContainPipeline(expectedPipeline: ExpectedPipeline, expectedDataSample: DataSample = EmptyDataSample): Unit = {
       val pipelinesWithExpectedBindings = assertHasExpectedBindings(actualPipelines, expectedPipeline)
 
       val pipelinesWithExpectedLastComponent = assertHasLastComponent(pipelinesWithExpectedBindings, expectedPipeline)

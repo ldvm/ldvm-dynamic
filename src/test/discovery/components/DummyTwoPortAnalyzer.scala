@@ -16,7 +16,7 @@ class DummyTwoPortAnalyzer extends AnalyzerInstance {
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]) = {
     assert(state.contains(port2BoundState))
-    Future.successful(RdfDataSample(""))
+    Future.successful(EmptyDataSample)
   }
 
   override def checkPort(port: Port, state: Option[ComponentState], outputDataSample: DataSample): Future[PortCheckResult] = {

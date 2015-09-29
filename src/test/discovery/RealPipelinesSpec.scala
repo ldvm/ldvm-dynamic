@@ -1,22 +1,16 @@
 package discovery
 
-import java.io.File
-
 import discovery.components.analyzer.{RuianGeocoderAnalyzer, TownsExtractorAnalyzer}
 import discovery.components.datasource.JenaDataSource
 import discovery.components.visualizer.GoogleMapsVisualizer
-import discovery.model.{DiscoveryInput, RdfDataSample}
-import org.scalatest.LoneElement._
+import discovery.model.DiscoveryInput
 import org.scalatest.concurrent.ScalaFutures._
-import org.scalatest.time.{Seconds, Span}
 
 class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
 
   var ttlPath = "test/discovery/ttl/"
-  implicit val patienceConfig = PatienceConfig(scaled(Span(10, Seconds)))
 
   "Discovery" should "discover LDOW 2015 pipeline" in {
-
     val ruian = new JenaDataSource(JenaUtil.modelFromTtlFile(ttlPath + "ruian.ttl"))
     val institutions = new JenaDataSource(JenaUtil.modelFromTtlFile(ttlPath + "ipp.ttl"))
     val googleMaps = new GoogleMapsVisualizer()
@@ -37,7 +31,7 @@ class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
       ExpectedBinding(townsExtractor, "PORT1", ruianGeocoder),
       ExpectedBinding(institutions, "PORT2", ruianGeocoder),
       ExpectedBinding(ruianGeocoder, "PORT1", googleMaps)
-    ))
+    )
     pipelines should have size 1
   }
 
