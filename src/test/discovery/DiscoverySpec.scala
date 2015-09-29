@@ -5,7 +5,6 @@ import discovery.components.{DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSour
 import discovery.model.PortCheckResult.Status
 import discovery.model._
 import org.scalatest.concurrent.ScalaFutures._
-import org.scalatest.time.{Seconds, Span}
 
 class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
   "Discovery" should "discover pipeline from two matching components" in {
@@ -15,10 +14,7 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val input = new DiscoveryInput(Seq(dummySource), Seq(dummySuccessVisualizer), Seq())
     val pipelines = createDiscovery().discover(input).futureValue
 
-    assertContainsPipeline(
-      pipelines,
-      ExpectedPipeline(dummySuccessVisualizer, ExpectedBinding(dummySource, "PORT1", dummySuccessVisualizer))
-    )
+    pipelines shouldContainPipeline ExpectedPipeline(dummySuccessVisualizer, ExpectedBinding(dummySource, "PORT1", dummySuccessVisualizer))
     pipelines should have size 1
   }
 
@@ -40,14 +36,8 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent1, visualizerComponent2), Seq())
     val pipelines = createDiscovery().discover(input).futureValue
 
-    assertContainsPipeline(
-      pipelines,
-      ExpectedPipeline(visualizerComponent1, ExpectedBinding(sourceComponent, "PORT1", visualizerComponent1))
-    )
-    assertContainsPipeline(
-      pipelines,
-      ExpectedPipeline(visualizerComponent2, ExpectedBinding(sourceComponent, "PORT1", visualizerComponent2))
-    )
+    pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent1, ExpectedBinding(sourceComponent, "PORT1", visualizerComponent1))
+    pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent2, ExpectedBinding(sourceComponent, "PORT1", visualizerComponent2))
     pipelines should have size 2
   }
 

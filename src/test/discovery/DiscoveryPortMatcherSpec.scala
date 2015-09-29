@@ -2,8 +2,8 @@ package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
 import discovery.components.{DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
-import discovery.model.{ComponentState, PortMatch, Pipeline}
 import discovery.model.PortCheckResult.Status
+import discovery.model.{ComponentState, Pipeline, PortMatch}
 import org.scalatest.concurrent.ScalaFutures._
 
 class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
@@ -15,12 +15,9 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
 
     val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent))).futureValue
 
-    assertContainsPipeline(
-      matchedPipelines,
-      ExpectedPipeline(
-        visualizerComponent,
-        ExpectedBinding(sourceComponent, visualizerComponent.port.name, visualizerComponent)
-      )
+    matchedPipelines shouldContainPipeline ExpectedPipeline(
+      visualizerComponent,
+      ExpectedBinding(sourceComponent, visualizerComponent.port.name, visualizerComponent)
     )
     matchedPipelines should have size 1
   }
@@ -43,14 +40,8 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
 
     val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent1), buildInitialPipeline(sourceComponent2))).futureValue
 
-    assertContainsPipeline(
-      matchedPipelines,
-      ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent1, visualizerComponent.port.name, visualizerComponent))
-    )
-    assertContainsPipeline(
-      matchedPipelines,
-      ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent2, visualizerComponent.port.name, visualizerComponent))
-    )
+    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent1, visualizerComponent.port.name, visualizerComponent))
+    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent2, visualizerComponent.port.name, visualizerComponent))
     matchedPipelines should have size 2
   }
 
@@ -61,13 +52,10 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
 
     val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(twoPortComponent, Seq(buildInitialPipeline(sourceComponent))).futureValue
 
-    assertContainsPipeline(
-      matchedPipelines,
-      ExpectedPipeline(
-        twoPortComponent,
-        ExpectedBinding(sourceComponent, twoPortComponent.port1.name, twoPortComponent),
-        ExpectedBinding(sourceComponent, twoPortComponent.port2.name, twoPortComponent)
-      )
+    matchedPipelines shouldContainPipeline ExpectedPipeline(
+      twoPortComponent,
+      ExpectedBinding(sourceComponent, twoPortComponent.port1.name, twoPortComponent),
+      ExpectedBinding(sourceComponent, twoPortComponent.port2.name, twoPortComponent)
     )
     matchedPipelines should have size 1
   }
@@ -88,19 +76,13 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
       )
     ).futureValue
 
-    assertContainsPipeline(
-      matchedPipelines,
-      ExpectedPipeline(
-        visualizerComponent,
-        ExpectedBinding(sourceComponent, twoPortComponent.port1.name, twoPortComponent),
-        ExpectedBinding(sourceComponent, twoPortComponent.port2.name, twoPortComponent),
-        ExpectedBinding(twoPortComponent, visualizerComponent.port.name, visualizerComponent)
-      )
+    matchedPipelines shouldContainPipeline ExpectedPipeline(
+      visualizerComponent,
+      ExpectedBinding(sourceComponent, twoPortComponent.port1.name, twoPortComponent),
+      ExpectedBinding(sourceComponent, twoPortComponent.port2.name, twoPortComponent),
+      ExpectedBinding(twoPortComponent, visualizerComponent.port.name, visualizerComponent)
     )
-    assertContainsPipeline(
-      matchedPipelines,
-      ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent, visualizerComponent.port.name, visualizerComponent))
-    )
+    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent, visualizerComponent.port.name, visualizerComponent))
     matchedPipelines should have size 2
   }
 

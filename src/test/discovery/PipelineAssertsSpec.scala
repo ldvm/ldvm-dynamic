@@ -24,7 +24,7 @@ class PipelineAssertsSpec extends LdvmSpec {
   )
 
   "assertContainsPipeline" should "pass with expected pipeline" in {
-    assertContainsPipeline(Seq(validPipeline), expectedPipeline)
+    Seq(validPipeline) shouldContainPipeline expectedPipeline
   }
 
   it should "fail with unexpected bindings" in {
@@ -57,9 +57,9 @@ class PipelineAssertsSpec extends LdvmSpec {
     failsWithMessage(Seq(pipeline), "contains unbound components")
   }
 
-  def failsWithMessage(pipelines: Seq[Pipeline], message : String): Unit = {
+  def failsWithMessage(pipelines: Seq[Pipeline], message: String): Unit = {
     val exception = intercept[TestFailedException] {
-      assertContainsPipeline(pipelines, expectedPipeline)
+      pipelines shouldContainPipeline expectedPipeline
     }
     exception.getMessage() should include(message)
   }
