@@ -1,7 +1,7 @@
 package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
-import discovery.components.{DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
+import discovery.components.{DummyTransformer, DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
 import discovery.model.PortCheckResult.Status
 import discovery.model._
 import org.scalatest.concurrent.ScalaFutures._
@@ -38,6 +38,26 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
 
     pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent1, ExpectedBinding(sourceComponent, visualizerComponent1.port, visualizerComponent1))
     pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent2, ExpectedBinding(sourceComponent, visualizerComponent2.port, visualizerComponent2))
+    pipelines should have size 2
+  }
+
+  it should "create only one pipeline containing transformer matching anything" in {
+    val sourceComponent = new JenaDataSource(ModelFactory.createDefaultModel())
+    val transformerComponent = new DummyTransformer(Status.Success)
+    val visualizerComponent = new DummyVisualizer(Status.Success)
+
+    val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent), Seq(transformerComponent))
+    val pipelines = createDiscovery().discover(input).futureValue
+
+    pipelines shouldContainPipeline ExpectedPipeline(
+      visualizerComponent,
+      ExpectedBinding(sourceComponent, transformerComponent.port, transformerComponent),
+      ExpectedBinding(transformerComponent, visualizerComponent.port, visualizerComponent)
+    )
+    pipelines shouldContainPipeline ExpectedPipeline(
+      visualizerComponent,
+      ExpectedBinding(sourceComponent, visualizerComponent.port, visualizerComponent)
+    )
     pipelines should have size 2
   }
 
