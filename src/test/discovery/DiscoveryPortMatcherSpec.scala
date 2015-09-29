@@ -3,7 +3,7 @@ package discovery
 import com.hp.hpl.jena.rdf.model.ModelFactory
 import discovery.components.{DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
 import discovery.model.PortCheckResult.Status
-import discovery.model.{ComponentState, Pipeline, PortMatch}
+import discovery.model._
 import org.scalatest.concurrent.ScalaFutures._
 
 class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
@@ -66,13 +66,13 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
     val twoPortComponent = new DummyTwoPortAnalyzer()
     val visualizerComponent = new DummyVisualizer(Status.Success)
 
-    val initialPipeline: Pipeline = buildInitialPipeline(sourceComponent)
+    val initialPipeline = buildInitialPipeline(sourceComponent)
     val twoPortCoponentState: Some[ComponentState] = Some(twoPortComponent.port2BoundState)
     val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(
       visualizerComponent,
       Seq(
         initialPipeline,
-        pipelineBuilder.buildPipeline(twoPortComponent, Seq(PortMatch(twoPortComponent.port1, initialPipeline, twoPortCoponentState), PortMatch(twoPortComponent.port2, initialPipeline, twoPortCoponentState))).futureValue
+        pipelineBuilder.buildPartialPipeline(twoPortComponent, Seq(PortMatch(twoPortComponent.port1, initialPipeline, twoPortCoponentState), PortMatch(twoPortComponent.port2, initialPipeline, twoPortCoponentState))).futureValue
       )
     ).futureValue
 
@@ -86,7 +86,7 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
     matchedPipelines should have size 2
   }
 
-  def buildInitialPipeline(sourceComponent: JenaDataSource): Pipeline = {
+  def buildInitialPipeline(sourceComponent: JenaDataSource): PartialPipeline = {
     pipelineBuilder.buildInitialPipeline(sourceComponent).futureValue
   }
 }

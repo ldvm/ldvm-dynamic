@@ -3,19 +3,27 @@ package discovery
 import java.util.concurrent.atomic.AtomicInteger
 
 import discovery.model._
-import discovery.model.components.{DataSourceInstance, VisualizerInstance, ComponentInstance, ProcessorInstance}
-
+import discovery.model.components.{VisualizerInstance, ProcessorInstance, ComponentInstance, DataSourceInstance}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PipelineBuilder(implicit executor : ExecutionContext) {
+class PipelineBuilder(implicit executor: ExecutionContext) {
   val pipelineComponentCounter: AtomicInteger = new AtomicInteger()
 
-  def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch]): Future[Pipeline] = {
+  def buildCompletePipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch]): CompletePipeline = {
     val newLastComponent = newComponent(componentInstance)
-    val eventuallyDataSample: Future[DataSample] = dataSample(componentInstance, portMatches)
+    CompletePipeline(
+      pipelineComponents(portMatches, newLastComponent),
+      pipelineBindings(portMatches, newLastComponent),
+      newLastComponent)
+  }
+
+  def buildPartialPipeline(componentInstance: ProcessorInstance, portMatches: Seq[PortMatch]): Future[PartialPipeline] = {
+    val newLastComponent = newComponent(componentInstance)
+    val dataSamples = portMatches.map(portMatch => portMatch.port -> portMatch.startPipeline.lastOutputDataSample).toMap
+    val eventuallyDataSample: Future[DataSample] = componentInstance.getOutputDataSample(portMatches.last.maybeState, dataSamples)
     eventuallyDataSample.map { dataSample =>
-      Pipeline(
+      PartialPipeline(
         pipelineComponents(portMatches, newLastComponent),
         pipelineBindings(portMatches, newLastComponent),
         newLastComponent,
@@ -23,10 +31,10 @@ class PipelineBuilder(implicit executor : ExecutionContext) {
     }
   }
 
-  def buildInitialPipeline(dataSource: DataSourceInstance): Future[Pipeline] = {
+  def buildInitialPipeline(dataSource: DataSourceInstance): Future[PartialPipeline] = {
     val pipelineComponent = newComponent(dataSource)
     dataSource.getOutputDataSample(state = None, dataSamples = Map()).map { outputDataSample =>
-      Pipeline(
+      PartialPipeline(
         Seq(pipelineComponent),
         Seq(),
         pipelineComponent,

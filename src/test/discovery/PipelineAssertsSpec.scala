@@ -16,11 +16,10 @@ class PipelineAssertsSpec extends LdvmSpec {
   val sourceComponent = PipelineComponent("A", expectedDataSource)
   val visualizerComponent = PipelineComponent("B", expectedVisualizer)
 
-  val validPipeline = Pipeline(
+  val validPipeline = CompletePipeline(
     Seq(sourceComponent, visualizerComponent),
     Seq(PortBinding(sourceComponent, expectedVisualizer.port, visualizerComponent)),
-    visualizerComponent,
-    DataSample()
+    visualizerComponent
   )
 
   "assertContainsPipeline" should "pass with expected pipeline" in {
@@ -33,7 +32,7 @@ class PipelineAssertsSpec extends LdvmSpec {
   }
 
   it should "fail with unexpected last component" in {
-    val pipeline = validPipeline.copy(lastComponent = sourceComponent)
+    val pipeline = validPipeline.copy(lastComponent = new PipelineComponent("OTHER", new DummyVisualizer(Status.Success)))
     failsWithMessage(Seq(pipeline), "has expected last component")
   }
 
@@ -42,7 +41,7 @@ class PipelineAssertsSpec extends LdvmSpec {
   }
 
   ignore should "fail with nonempty data sample" in {
-    val pipeline = validPipeline.copy(lastOutputDataSample = DataSample())
+    val pipeline = PartialPipeline(validPipeline.components, validPipeline.bindings, validPipeline.lastComponent, DataSample())
     failsWithMessage(Seq(pipeline), "did not end with empty data sample")
   }
 
@@ -59,11 +58,10 @@ class PipelineAssertsSpec extends LdvmSpec {
   it should "fail with component with an unbound port" in {
     val twoPortVisualizer = new DummyTwoPortVisualizer()
     val twoPortVisualizerComponent = PipelineComponent("TPV", twoPortVisualizer)
-    val pipeline = Pipeline(
+    val pipeline = CompletePipeline(
       Seq(sourceComponent, twoPortVisualizerComponent),
       Seq(PortBinding(sourceComponent, twoPortVisualizer.port1, twoPortVisualizerComponent)),
-      twoPortVisualizerComponent,
-      DataSample()
+      twoPortVisualizerComponent
     )
     val exception = intercept[TestFailedException] {
       Seq(pipeline) shouldContainPipeline ExpectedPipeline(
