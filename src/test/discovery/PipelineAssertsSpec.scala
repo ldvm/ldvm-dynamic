@@ -1,9 +1,9 @@
 package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
-import discovery.components.{DummyVisualizer, JenaDataSource}
+import discovery.components.{DummyTwoPortVisualizer, DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
 import discovery.model.PortCheckResult.Status
-import discovery.model.{DataSample, Pipeline, PipelineComponent, PortBinding}
+import discovery.model._
 import org.scalatest.exceptions.TestFailedException
 
 class PipelineAssertsSpec extends LdvmSpec {
@@ -46,7 +46,6 @@ class PipelineAssertsSpec extends LdvmSpec {
     failsWithMessage(Seq(pipeline), "did not end with empty data sample")
   }
 
-
   it should "fail with non-unique pipeline component names" in {
     val pipeline = validPipeline.copy(components = Seq(PipelineComponent("A", expectedDataSource), PipelineComponent("A", expectedVisualizer)))
     failsWithMessage(Seq(pipeline), "does not have all components unique")
@@ -55,6 +54,24 @@ class PipelineAssertsSpec extends LdvmSpec {
   it should "fail with unbound component" in {
     val pipeline = validPipeline.copy(components = Seq(sourceComponent, visualizerComponent, PipelineComponent("C", expectedDataSource)))
     failsWithMessage(Seq(pipeline), "contains unbound components")
+  }
+
+  it should "fail with component with an unbound port" in {
+    val twoPortVisualizer = new DummyTwoPortVisualizer()
+    val twoPortVisualizerComponent = PipelineComponent("TPV", twoPortVisualizer)
+    val pipeline = Pipeline(
+      Seq(sourceComponent, twoPortVisualizerComponent),
+      Seq(PortBinding(sourceComponent, twoPortVisualizer.port1, twoPortVisualizerComponent)),
+      twoPortVisualizerComponent,
+      DataSample()
+    )
+    val exception = intercept[TestFailedException] {
+      Seq(pipeline) shouldContainPipeline ExpectedPipeline(
+        twoPortVisualizer,
+        ExpectedBinding(expectedDataSource, twoPortVisualizer.port1.name, twoPortVisualizer)
+      )
+    }
+    exception.getMessage() should include("has unbound ports List(Port(PORT2,2))")
   }
 
   def failsWithMessage(pipelines: Seq[Pipeline], message: String): Unit = {

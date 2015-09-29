@@ -1,6 +1,6 @@
 package discovery
 
-import discovery.model.components.ComponentInstance
+import discovery.model.components.{ComponentInstanceWithInputs, ComponentInstance}
 import discovery.model.{DataSample, Pipeline}
 import org.scalatest.Assertions._
 
@@ -22,6 +22,7 @@ trait PipelineAsserts {
       assertEndsWithEmptyDataSample(matchingPipeline, expectedDataSample)
       assertUniquePipelineComponents(matchingPipeline)
       assertNoUnboundComponents(matchingPipeline)
+      assertAllComponentsBoundCompletely(matchingPipeline)
     }
 
     private def assertHasExpectedBindings(pipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline): Seq[Pipeline] = {
@@ -67,6 +68,16 @@ trait PipelineAsserts {
       if (pipeline.components.toSet != boundComponents) {
         fail(s"Pipeline $pipeline\n\t contains unbound components")
       }
+    }
+
+    private def assertAllComponentsBoundCompletely(pipeline: Pipeline): Unit = {
+      pipeline.components.map(_.componentInstance).collect({case componentInstance: ComponentInstanceWithInputs =>
+        val boundPorts = pipeline.bindings.filter(_.endComponent.componentInstance == componentInstance).map(_.endPort).toSet
+        val unboundPorts = componentInstance.getInputPorts.filterNot(boundPorts.contains)
+        if (unboundPorts.nonEmpty) {
+          fail(s"Component instance $componentInstance in pipeline $pipeline\n\t has unbound ports $unboundPorts")
+        }
+      })
     }
 
     private def hasExpectedBindings(expectedBindings: Seq[ExpectedBinding])(pipeline: Pipeline): Boolean = {
