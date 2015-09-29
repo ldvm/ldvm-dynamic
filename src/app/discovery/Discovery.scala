@@ -10,14 +10,14 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
 
   val MAX_ITERATIONS = 10
 
-  def discover(input: DiscoveryInput): Future[Seq[CompletePipeline]] = {
+  def discover(input: DiscoveryInput): Future[Seq[Pipeline]] = {
     createInitialPipelines(input.dataSources).flatMap { initialPipelines =>
       val possibleComponents = input.processors ++ input.visualizers
       iterate(IterationData(initialPipelines, completedPipelines = Seq(), possibleComponents, 1))
     }
   }
 
-  private def iterate(iterationData: IterationData): Future[Seq[CompletePipeline]] = {
+  private def iterate(iterationData: IterationData): Future[Seq[Pipeline]] = {
     iterationBody(iterationData).flatMap { nextIterationData =>
       val discoveredNewPipeline = nextIterationData.givenPipelines.size > iterationData.givenPipelines.size
 
@@ -37,13 +37,12 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
       val newPipelines = rawPipelines.view.flatten
         .filterNot(containsComponentBoundToItself)
         .filter(containsBindingToIteration(iterationData.iterationNumber - 1))
-      val completePipelines = newPipelines collect { case p: CompletePipeline => p }
-      val incompletePipelines = newPipelines collect { case p: PartialPipeline => p }
+      val (completePipelines, incompletePipelines) = newPipelines.partition(_.isComplete)
       IterationData(iterationData.givenPipelines ++ incompletePipelines, iterationData.completedPipelines ++ completePipelines, iterationData.possibleComponents, iterationData.iterationNumber + 1)
     }
   }
 
-  private def createInitialPipelines(dataSources: Seq[DataSourceInstance]): Future[Seq[PartialPipeline]] = {
+  private def createInitialPipelines(dataSources: Seq[DataSourceInstance]): Future[Seq[Pipeline]] = {
     Future.sequence(dataSources.map(pipelineBuilder.buildInitialPipeline))
   }
 

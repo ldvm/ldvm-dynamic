@@ -1,3 +1,3 @@
 package discovery.model
 
-case class PortMatch(port: Port, startPipeline: PartialPipeline, maybeState: Option[ComponentState])
+case class PortMatch(port: Port, startPipeline: Pipeline, maybeState: Option[ComponentState])

@@ -72,7 +72,7 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
       visualizerComponent,
       Seq(
         initialPipeline,
-        pipelineBuilder.buildPartialPipeline(twoPortComponent, Seq(PortMatch(twoPortComponent.port1, initialPipeline, twoPortCoponentState), PortMatch(twoPortComponent.port2, initialPipeline, twoPortCoponentState)), 0).futureValue
+        pipelineBuilder.buildPipeline(twoPortComponent, Seq(PortMatch(twoPortComponent.port1, initialPipeline, twoPortCoponentState), PortMatch(twoPortComponent.port2, initialPipeline, twoPortCoponentState)), 0).futureValue
       ),
       1
     ).futureValue
@@ -87,7 +87,7 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
     matchedPipelines should have size 2
   }
 
-  def buildInitialPipeline(sourceComponent: JenaDataSource): PartialPipeline = {
+  def buildInitialPipeline(sourceComponent: JenaDataSource): Pipeline = {
     pipelineBuilder.buildInitialPipeline(sourceComponent).futureValue
   }
 }

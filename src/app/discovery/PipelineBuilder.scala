@@ -10,20 +10,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class PipelineBuilder(implicit executor: ExecutionContext) {
   val pipelineComponentCounter: AtomicInteger = new AtomicInteger()
 
-  def buildCompletePipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch], discoveryIteration: Int): CompletePipeline = {
-    val newLastComponent = newComponent(componentInstance, discoveryIteration)
-    CompletePipeline(
-      pipelineComponents(portMatches, newLastComponent),
-      pipelineBindings(portMatches, newLastComponent),
-      newLastComponent)
-  }
-
-  def buildPartialPipeline(componentInstance: ProcessorInstance, portMatches: Seq[PortMatch], discoveryIteration: Int): Future[PartialPipeline] = {
+  def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch], discoveryIteration: Int): Future[Pipeline] = {
     val newLastComponent = newComponent(componentInstance, discoveryIteration)
     val dataSamples = portMatches.map(portMatch => portMatch.port -> portMatch.startPipeline.lastOutputDataSample).toMap
-    val eventuallyDataSample: Future[DataSample] = componentInstance.getOutputDataSample(portMatches.last.maybeState, dataSamples)
+    val eventuallyDataSample: Future[DataSample] = dataSample(componentInstance, portMatches)
     eventuallyDataSample.map { dataSample =>
-      PartialPipeline(
+      Pipeline(
         pipelineComponents(portMatches, newLastComponent),
         pipelineBindings(portMatches, newLastComponent),
         newLastComponent,
@@ -31,10 +23,10 @@ class PipelineBuilder(implicit executor: ExecutionContext) {
     }
   }
 
-  def buildInitialPipeline(dataSource: DataSourceInstance): Future[PartialPipeline] = {
+  def buildInitialPipeline(dataSource: DataSourceInstance): Future[Pipeline] = {
     val pipelineComponent = newComponent(dataSource, 0)
     dataSource.getOutputDataSample(state = None, dataSamples = Map()).map { outputDataSample =>
-      PartialPipeline(
+      Pipeline(
         Seq(pipelineComponent),
         Seq(),
         pipelineComponent,

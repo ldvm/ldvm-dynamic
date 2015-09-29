@@ -16,10 +16,11 @@ class PipelineAssertsSpec extends LdvmSpec {
   val sourceComponent = PipelineComponent("A", expectedDataSource, 1)
   val visualizerComponent = PipelineComponent("B", expectedVisualizer, 1)
 
-  val validPipeline = CompletePipeline(
+  val validPipeline = Pipeline(
     Seq(sourceComponent, visualizerComponent),
     Seq(PortBinding(sourceComponent, expectedVisualizer.port, visualizerComponent)),
-    visualizerComponent
+    visualizerComponent,
+    DataSample()
   )
 
   "assertContainsPipeline" should "pass with expected pipeline" in {
@@ -41,7 +42,7 @@ class PipelineAssertsSpec extends LdvmSpec {
   }
 
   ignore should "fail with nonempty data sample" in {
-    val pipeline = PartialPipeline(validPipeline.components, validPipeline.bindings, validPipeline.lastComponent, DataSample())
+    val pipeline = Pipeline(validPipeline.components, validPipeline.bindings, validPipeline.lastComponent, DataSample())
     failsWithMessage(Seq(pipeline), "did not end with empty data sample")
   }
 
@@ -58,10 +59,11 @@ class PipelineAssertsSpec extends LdvmSpec {
   it should "fail with component with an unbound port" in {
     val twoPortVisualizer = new DummyTwoPortVisualizer()
     val twoPortVisualizerComponent = PipelineComponent("TPV", twoPortVisualizer, 1)
-    val pipeline = CompletePipeline(
+    val pipeline = Pipeline(
       Seq(sourceComponent, twoPortVisualizerComponent),
       Seq(PortBinding(sourceComponent, twoPortVisualizer.port1, twoPortVisualizerComponent)),
-      twoPortVisualizerComponent
+      twoPortVisualizerComponent,
+      DataSample()
     )
     val exception = intercept[TestFailedException] {
       Seq(pipeline) shouldContainPipeline ExpectedPipeline(
