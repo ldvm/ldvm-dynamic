@@ -33,10 +33,11 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
     val eventualPipelines = Future.sequence {
       iterationData.possibleComponents.map { c => portMatcher.tryMatchPorts(c, iterationData.givenPipelines) }
     }
-    eventualPipelines.map { unflatennedPipelines =>
-      val pipelines = unflatennedPipelines.flatten
-      val completePipelines = pipelines collect { case p: CompletePipeline => p }
-      val incompletePipelines = pipelines collect { case p: PartialPipeline => p }
+    eventualPipelines.map { rawPipelines =>
+      val newPipelines = rawPipelines.flatten
+        .filterNot(containsComponentBoundToItself)
+      val completePipelines = newPipelines collect { case p: CompletePipeline => p }
+      val incompletePipelines = newPipelines collect { case p: PartialPipeline => p }
       IterationData(iterationData.givenPipelines ++ incompletePipelines, iterationData.completedPipelines ++ completePipelines, iterationData.possibleComponents)
     }
   }
@@ -44,5 +45,9 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
   private def createInitialPipelines(dataSources: Seq[DataSourceInstance]): Future[Seq[PartialPipeline]] = {
     Future.sequence(dataSources.map(pipelineBuilder.buildInitialPipeline))
   }
+
+  def containsComponentBoundToItself(pipeline: Pipeline): Boolean = pipeline.bindings.exists(
+    binding => binding.endComponent.componentInstance == binding.startComponent.componentInstance
+  )
 
 }
