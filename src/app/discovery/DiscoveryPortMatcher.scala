@@ -2,29 +2,35 @@ package discovery
 
 import discovery.model.PortCheckResult.Status
 import discovery.model._
-import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs, ProcessorInstance}
-import play.api.libs.concurrent.Execution.Implicits._
+import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
+class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: ExecutionContext) {
 
-  def tryMatchPorts(componentInstance: ComponentInstanceWithInputs, givenPipelines: Seq[Pipeline]): Future[Seq[Pipeline]] = {
+  def tryMatchPorts(componentInstance: ComponentInstanceWithInputs, givenPipelines: Seq[Pipeline], iteration: Int): Future[Seq[Pipeline]] = {
     val ports = componentInstance.getInputPorts.sortBy(_.priority)
-    tryMatchPorts(ports, givenPipelines, portMatches = Map(), lastStates = Seq(None), componentInstance)
+    tryMatchPorts(ports, givenPipelines, portMatches = Map(), lastStates = Seq(None), iteration, componentInstance)
   }
 
-  private def tryMatchPorts(remainingPorts: Seq[Port], givenPipelines: Seq[Pipeline], portMatches: Map[Port, Seq[PortMatch]], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[Pipeline]] = {
+  private def tryMatchPorts(
+                             remainingPorts: Seq[Port],
+                             givenPipelines: Seq[Pipeline],
+                             portMatches: Map[Port, Seq[PortMatch]],
+                             lastStates: Seq[Option[ComponentState]],
+                             iteration: Int,
+                             componentInstance: ComponentInstanceWithInputs
+                             ): Future[Seq[Pipeline]] = {
     remainingPorts match {
       case Nil =>
         if (portMatches.values.forall(_.nonEmpty)) {
-          buildPipelines(componentInstance, portMatches)
+          buildPipelines(componentInstance, portMatches, iteration)
         } else {
           Future.successful(Seq())
         }
       case headPort :: tail =>
         tryMatchGivenPipelinesWithPort(headPort, givenPipelines, lastStates, componentInstance).flatMap { matches =>
-          tryMatchPorts(tail, givenPipelines, portMatches + (headPort -> matches), matches.map(_.maybeState), componentInstance)
+          tryMatchPorts(tail, givenPipelines, portMatches + (headPort -> matches), matches.map(_.maybeState), iteration, componentInstance)
         }
     }
   }
@@ -36,7 +42,7 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
         state <- lastStates
       ) yield {
         val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
-        eventualCheckResult.collect {
+        eventualCheckResult.map {
           case c: PortCheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
           case _ => None
         }
@@ -45,16 +51,16 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder) {
     eventualMaybeMatches.map(_.flatten)
   }
 
-  private def buildPipelines(componentInstance: ComponentInstance, portMatches: Map[Port, Seq[PortMatch]]): Future[Seq[Pipeline]] = {
+  private def buildPipelines(componentInstance: ComponentInstance, portMatches: Map[Port, Seq[PortMatch]], iteration: Int): Future[Seq[Pipeline]] = {
     val allCombinations = combine(portMatches.values)
     Future.sequence(
-      allCombinations.map { portSolutions => pipelineBuilder.buildPipeline(componentInstance, portSolutions) }
+      allCombinations.map { portSolutions => pipelineBuilder.buildPipeline(componentInstance, portSolutions, iteration) }
     )
   }
 
   private def combine[A](xs: Traversable[Traversable[A]]): Seq[Seq[A]] = {
     xs.foldLeft(Seq(Seq.empty[A])) {
       (x, y) => for (a <- x.view; b <- y) yield a :+ b
-    }.toList
+    }
   }
 }

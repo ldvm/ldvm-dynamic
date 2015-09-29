@@ -3,16 +3,16 @@ package discovery
 import java.util.concurrent.atomic.AtomicInteger
 
 import discovery.model._
-import discovery.model.components.{DataSourceInstance, VisualizerInstance, ComponentInstance, ProcessorInstance}
-import play.api.libs.concurrent.Execution.Implicits._
+import discovery.model.components.{ComponentInstance, DataSourceInstance, ProcessorInstance, VisualizerInstance}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class PipelineBuilder {
+class PipelineBuilder(implicit executor: ExecutionContext) {
   val pipelineComponentCounter: AtomicInteger = new AtomicInteger()
 
-  def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch]): Future[Pipeline] = {
-    val newLastComponent = newComponent(componentInstance)
+  def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch], discoveryIteration: Int): Future[Pipeline] = {
+    val newLastComponent = newComponent(componentInstance, discoveryIteration)
+    val dataSamples = portMatches.map(portMatch => portMatch.port -> portMatch.startPipeline.lastOutputDataSample).toMap
     val eventuallyDataSample: Future[DataSample] = dataSample(componentInstance, portMatches)
     eventuallyDataSample.map { dataSample =>
       Pipeline(
@@ -24,7 +24,7 @@ class PipelineBuilder {
   }
 
   def buildInitialPipeline(dataSource: DataSourceInstance): Future[Pipeline] = {
-    val pipelineComponent = newComponent(dataSource)
+    val pipelineComponent = newComponent(dataSource, 0)
     dataSource.getOutputDataSample(state = None, dataSamples = Map()).map { outputDataSample =>
       Pipeline(
         Seq(pipelineComponent),
@@ -34,12 +34,12 @@ class PipelineBuilder {
     }
   }
 
-  def newComponent(componentInstance: ComponentInstance): PipelineComponent = {
-    PipelineComponent("PC" + pipelineComponentCounter.incrementAndGet(), componentInstance)
+  private def newComponent(componentInstance: ComponentInstance, discoveryIteration: Int): PipelineComponent = {
+    PipelineComponent("PC" + pipelineComponentCounter.incrementAndGet(), componentInstance, discoveryIteration)
   }
 
   private def pipelineComponents(portMatches: Seq[PortMatch], newLastComponent: PipelineComponent): Seq[PipelineComponent] = {
-    portMatches.flatMap(_.startPipeline.components) :+ newLastComponent
+    portMatches.flatMap(_.startPipeline.components ++ Seq(newLastComponent)).distinct
   }
 
   private def pipelineBindings(portMatches: Seq[PortMatch], newLastComponent: PipelineComponent): Seq[PortBinding] = {

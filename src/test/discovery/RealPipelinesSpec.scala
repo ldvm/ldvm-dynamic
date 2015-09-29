@@ -10,7 +10,7 @@ import org.scalatest.LoneElement._
 import org.scalatest.concurrent.ScalaFutures._
 import org.scalatest.time.{Seconds, Span}
 
-class RealPipelinesSpec extends LdvmSpec {
+class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
 
   var ttlPath = "test/discovery/ttl/"
   implicit val patienceConfig = PatienceConfig(scaled(Span(10, Seconds)))
@@ -31,7 +31,7 @@ class RealPipelinesSpec extends LdvmSpec {
 
     val pipelines = createDiscovery().discover(input).futureValue
 
-    assertContainsPipeline(pipelines, ExpectedPipeline(
+    pipelines shouldContainPipeline ExpectedPipeline(
       googleMaps,
       ExpectedBinding(ruian, "PORT1", townsExtractor),
       ExpectedBinding(townsExtractor, "PORT1", ruianGeocoder),
