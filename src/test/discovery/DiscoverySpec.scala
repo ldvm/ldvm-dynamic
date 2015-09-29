@@ -41,7 +41,7 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     pipelines should have size 2
   }
 
-  ignore should "bind analyzer with two ports in correct order" in {
+  it should "bind analyzer with two ports in correct order" in {
     val sourceComponent = new JenaDataSource(ModelFactory.createDefaultModel())
     val analyzerComponent = new DummyTwoPortAnalyzer()
     val visualizerComponent = new DummyVisualizer(Status.Success)
@@ -49,6 +49,16 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent), Seq(analyzerComponent))
     val pipelines = createDiscovery().discover(input).futureValue
 
-    pipelines.foreach(println)
+    pipelines shouldContainPipeline ExpectedPipeline(
+      visualizerComponent,
+      ExpectedBinding(sourceComponent, analyzerComponent.port1.name, analyzerComponent),
+      ExpectedBinding(sourceComponent, analyzerComponent.port2.name, analyzerComponent),
+      ExpectedBinding(analyzerComponent, visualizerComponent.port.name, visualizerComponent)
+    )
+    pipelines shouldContainPipeline ExpectedPipeline(
+      visualizerComponent,
+      ExpectedBinding(sourceComponent, visualizerComponent.port.name, visualizerComponent)
+    )
+    pipelines should have size 2
   }
 }
