@@ -2,4 +2,4 @@ package discovery.model
 
 import discovery.model.components.ComponentInstance
 
-case class PipelineComponent(id: String, componentInstance: ComponentInstance)
+case class PipelineComponent(id: String, componentInstance: ComponentInstance, discoveryIteration: Int)

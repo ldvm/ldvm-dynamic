@@ -13,7 +13,7 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
     val sourceComponent = new JenaDataSource(ModelFactory.createDefaultModel())
     val visualizerComponent = new DummyVisualizer(Status.Success)
 
-    val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent))).futureValue
+    val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent)), 1).futureValue
 
     matchedPipelines shouldContainPipeline ExpectedPipeline(
       visualizerComponent,
@@ -27,7 +27,7 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
     val sourceComponent = new JenaDataSource(ModelFactory.createDefaultModel())
     val visualizerComponent = new DummyVisualizer(Status.Failure)
 
-    val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent))).futureValue
+    val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent)), 1).futureValue
 
     matchedPipelines shouldBe empty
   }
@@ -38,7 +38,7 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
     val sourceComponent2 = new JenaDataSource(ModelFactory.createDefaultModel())
     val visualizerComponent = new DummyVisualizer(Status.Success)
 
-    val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent1), buildInitialPipeline(sourceComponent2))).futureValue
+    val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent1), buildInitialPipeline(sourceComponent2)), 1).futureValue
 
     matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent1, visualizerComponent.port.name, visualizerComponent))
     matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent2, visualizerComponent.port.name, visualizerComponent))
@@ -50,7 +50,7 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
     val sourceComponent = new JenaDataSource(ModelFactory.createDefaultModel())
     val twoPortComponent = new DummyTwoPortAnalyzer()
 
-    val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(twoPortComponent, Seq(buildInitialPipeline(sourceComponent))).futureValue
+    val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(twoPortComponent, Seq(buildInitialPipeline(sourceComponent)), 1).futureValue
 
     matchedPipelines shouldContainPipeline ExpectedPipeline(
       twoPortComponent,
@@ -72,8 +72,9 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
       visualizerComponent,
       Seq(
         initialPipeline,
-        pipelineBuilder.buildPartialPipeline(twoPortComponent, Seq(PortMatch(twoPortComponent.port1, initialPipeline, twoPortCoponentState), PortMatch(twoPortComponent.port2, initialPipeline, twoPortCoponentState))).futureValue
-      )
+        pipelineBuilder.buildPartialPipeline(twoPortComponent, Seq(PortMatch(twoPortComponent.port1, initialPipeline, twoPortCoponentState), PortMatch(twoPortComponent.port2, initialPipeline, twoPortCoponentState)), 0).futureValue
+      ),
+      1
     ).futureValue
 
     matchedPipelines shouldContainPipeline ExpectedPipeline(

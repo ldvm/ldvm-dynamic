@@ -3,23 +3,23 @@ package discovery
 import java.util.concurrent.atomic.AtomicInteger
 
 import discovery.model._
-import discovery.model.components.{VisualizerInstance, ProcessorInstance, ComponentInstance, DataSourceInstance}
+import discovery.model.components.{ComponentInstance, DataSourceInstance, ProcessorInstance, VisualizerInstance}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class PipelineBuilder(implicit executor: ExecutionContext) {
   val pipelineComponentCounter: AtomicInteger = new AtomicInteger()
 
-  def buildCompletePipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch]): CompletePipeline = {
-    val newLastComponent = newComponent(componentInstance)
+  def buildCompletePipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch], discoveryIteration: Int): CompletePipeline = {
+    val newLastComponent = newComponent(componentInstance, discoveryIteration)
     CompletePipeline(
       pipelineComponents(portMatches, newLastComponent),
       pipelineBindings(portMatches, newLastComponent),
       newLastComponent)
   }
 
-  def buildPartialPipeline(componentInstance: ProcessorInstance, portMatches: Seq[PortMatch]): Future[PartialPipeline] = {
-    val newLastComponent = newComponent(componentInstance)
+  def buildPartialPipeline(componentInstance: ProcessorInstance, portMatches: Seq[PortMatch], discoveryIteration: Int): Future[PartialPipeline] = {
+    val newLastComponent = newComponent(componentInstance, discoveryIteration)
     val dataSamples = portMatches.map(portMatch => portMatch.port -> portMatch.startPipeline.lastOutputDataSample).toMap
     val eventuallyDataSample: Future[DataSample] = componentInstance.getOutputDataSample(portMatches.last.maybeState, dataSamples)
     eventuallyDataSample.map { dataSample =>
@@ -32,7 +32,7 @@ class PipelineBuilder(implicit executor: ExecutionContext) {
   }
 
   def buildInitialPipeline(dataSource: DataSourceInstance): Future[PartialPipeline] = {
-    val pipelineComponent = newComponent(dataSource)
+    val pipelineComponent = newComponent(dataSource, 0)
     dataSource.getOutputDataSample(state = None, dataSamples = Map()).map { outputDataSample =>
       PartialPipeline(
         Seq(pipelineComponent),
@@ -42,8 +42,8 @@ class PipelineBuilder(implicit executor: ExecutionContext) {
     }
   }
 
-  def newComponent(componentInstance: ComponentInstance): PipelineComponent = {
-    PipelineComponent("PC" + pipelineComponentCounter.incrementAndGet(), componentInstance)
+  private def newComponent(componentInstance: ComponentInstance, discoveryIteration: Int): PipelineComponent = {
+    PipelineComponent("PC" + pipelineComponentCounter.incrementAndGet(), componentInstance, discoveryIteration)
   }
 
   private def pipelineComponents(portMatches: Seq[PortMatch], newLastComponent: PipelineComponent): Seq[PipelineComponent] = {

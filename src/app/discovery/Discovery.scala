@@ -13,32 +13,32 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
   def discover(input: DiscoveryInput): Future[Seq[CompletePipeline]] = {
     createInitialPipelines(input.dataSources).flatMap { initialPipelines =>
       val possibleComponents = input.processors ++ input.visualizers
-      iterate(0, IterationData(initialPipelines, completedPipelines = Seq(), possibleComponents))
+      iterate(IterationData(initialPipelines, completedPipelines = Seq(), possibleComponents, 1))
     }
   }
 
-  private def iterate(iterationNumber: Int, iterationData: IterationData): Future[Seq[CompletePipeline]] = {
+  private def iterate(iterationData: IterationData): Future[Seq[CompletePipeline]] = {
     iterationBody(iterationData).flatMap { nextIterationData =>
       val discoveredNewPipeline = nextIterationData.givenPipelines.size > iterationData.givenPipelines.size
 
-      if (!discoveredNewPipeline || iterationNumber == MAX_ITERATIONS) {
+      if (!discoveredNewPipeline || iterationData.iterationNumber == MAX_ITERATIONS) {
         Future.successful(nextIterationData.completedPipelines)
       } else {
-        iterate(iterationNumber + 1, nextIterationData)
+        iterate(nextIterationData)
       }
     }
   }
 
   private def iterationBody(iterationData: IterationData): Future[IterationData] = {
     val eventualPipelines = Future.sequence {
-      iterationData.possibleComponents.map { c => portMatcher.tryMatchPorts(c, iterationData.givenPipelines) }
+      iterationData.possibleComponents.map { c => portMatcher.tryMatchPorts(c, iterationData.givenPipelines, iterationData.iterationNumber) }
     }
     eventualPipelines.map { rawPipelines =>
       val newPipelines = rawPipelines.flatten
         .filterNot(containsComponentBoundToItself)
       val completePipelines = newPipelines collect { case p: CompletePipeline => p }
       val incompletePipelines = newPipelines collect { case p: PartialPipeline => p }
-      IterationData(iterationData.givenPipelines ++ incompletePipelines, iterationData.completedPipelines ++ completePipelines, iterationData.possibleComponents)
+      IterationData(iterationData.givenPipelines ++ incompletePipelines, iterationData.completedPipelines ++ completePipelines, iterationData.possibleComponents, iterationData.iterationNumber + 1)
     }
   }
 

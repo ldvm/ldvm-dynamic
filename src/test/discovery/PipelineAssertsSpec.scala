@@ -1,7 +1,7 @@
 package discovery
 
 import com.hp.hpl.jena.rdf.model.ModelFactory
-import discovery.components.{DummyTwoPortVisualizer, DummyTwoPortAnalyzer, DummyVisualizer, JenaDataSource}
+import discovery.components.{DummyTwoPortVisualizer, DummyVisualizer, JenaDataSource}
 import discovery.model.PortCheckResult.Status
 import discovery.model._
 import org.scalatest.exceptions.TestFailedException
@@ -13,8 +13,8 @@ class PipelineAssertsSpec extends LdvmSpec {
     expectedVisualizer,
     ExpectedBinding(expectedDataSource, expectedVisualizer.port.name, expectedVisualizer)
   )
-  val sourceComponent = PipelineComponent("A", expectedDataSource)
-  val visualizerComponent = PipelineComponent("B", expectedVisualizer)
+  val sourceComponent = PipelineComponent("A", expectedDataSource, 1)
+  val visualizerComponent = PipelineComponent("B", expectedVisualizer, 1)
 
   val validPipeline = CompletePipeline(
     Seq(sourceComponent, visualizerComponent),
@@ -32,7 +32,7 @@ class PipelineAssertsSpec extends LdvmSpec {
   }
 
   it should "fail with unexpected last component" in {
-    val pipeline = validPipeline.copy(lastComponent = new PipelineComponent("OTHER", new DummyVisualizer(Status.Success)))
+    val pipeline = validPipeline.copy(lastComponent = new PipelineComponent("OTHER", new DummyVisualizer(Status.Success), 1))
     failsWithMessage(Seq(pipeline), "has expected last component")
   }
 
@@ -46,18 +46,18 @@ class PipelineAssertsSpec extends LdvmSpec {
   }
 
   it should "fail with non-unique pipeline component names" in {
-    val pipeline = validPipeline.copy(components = Seq(PipelineComponent("A", expectedDataSource), PipelineComponent("A", expectedVisualizer)))
+    val pipeline = validPipeline.copy(components = Seq(PipelineComponent("A", expectedDataSource, 1), PipelineComponent("A", expectedVisualizer, 1)))
     failsWithMessage(Seq(pipeline), "does not have all components unique")
   }
 
   it should "fail with unbound component" in {
-    val pipeline = validPipeline.copy(components = Seq(sourceComponent, visualizerComponent, PipelineComponent("C", expectedDataSource)))
+    val pipeline = validPipeline.copy(components = Seq(sourceComponent, visualizerComponent, PipelineComponent("C", expectedDataSource, 1)))
     failsWithMessage(Seq(pipeline), "contains unbound components")
   }
 
   it should "fail with component with an unbound port" in {
     val twoPortVisualizer = new DummyTwoPortVisualizer()
-    val twoPortVisualizerComponent = PipelineComponent("TPV", twoPortVisualizer)
+    val twoPortVisualizerComponent = PipelineComponent("TPV", twoPortVisualizer, 1)
     val pipeline = CompletePipeline(
       Seq(sourceComponent, twoPortVisualizerComponent),
       Seq(PortBinding(sourceComponent, twoPortVisualizer.port1, twoPortVisualizerComponent)),
