@@ -11,7 +11,7 @@ class PipelineAssertsSpec extends LdvmSpec {
   val expectedVisualizer = new DummyVisualizer(Status.Success)
   val expectedPipeline = ExpectedPipeline(
     expectedVisualizer,
-    ExpectedBinding(expectedDataSource, expectedVisualizer.port.name, expectedVisualizer)
+    ExpectedBinding(expectedDataSource, expectedVisualizer.port, expectedVisualizer)
   )
   val sourceComponent = PipelineComponent("A", expectedDataSource, 1)
   val visualizerComponent = PipelineComponent("B", expectedVisualizer, 1)
@@ -66,7 +66,7 @@ class PipelineAssertsSpec extends LdvmSpec {
     val exception = intercept[TestFailedException] {
       Seq(pipeline) shouldContainPipeline ExpectedPipeline(
         twoPortVisualizer,
-        ExpectedBinding(expectedDataSource, twoPortVisualizer.port1.name, twoPortVisualizer)
+        ExpectedBinding(expectedDataSource, twoPortVisualizer.port1, twoPortVisualizer)
       )
     }
     exception.getMessage() should include("has unbound ports List(Port(PORT2,2))")

@@ -1,7 +1,7 @@
 package discovery
 
+import discovery.model._
 import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs}
-import discovery.model.{CompletePipeline, DataSample, PartialPipeline, Pipeline}
 import org.scalatest.Assertions._
 
 trait PipelineAsserts {
@@ -10,6 +10,10 @@ trait PipelineAsserts {
   case class ExpectedPipeline(lastComponent: ComponentInstance, bindings: ExpectedBinding*)
 
   case class ExpectedBinding(startComponent: ComponentInstance, portName: String, endComponent: ComponentInstance)
+
+  object ExpectedBinding {
+    def apply(startComponent: ComponentInstance, port: Port, endComponent: ComponentInstance) = new ExpectedBinding(startComponent, port.name, endComponent)
+  }
 
   implicit class PipelineAssertsWrapper(actualPipelines: Seq[Pipeline]) {
     def shouldContainPipeline(expectedPipeline: ExpectedPipeline, expectedDataSample: DataSample = emptyDataSample): Unit = {

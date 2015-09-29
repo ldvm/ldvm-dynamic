@@ -14,7 +14,7 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val input = new DiscoveryInput(Seq(dummySource), Seq(dummySuccessVisualizer), Seq())
     val pipelines = createDiscovery().discover(input).futureValue
 
-    pipelines shouldContainPipeline ExpectedPipeline(dummySuccessVisualizer, ExpectedBinding(dummySource, "PORT1", dummySuccessVisualizer))
+    pipelines shouldContainPipeline ExpectedPipeline(dummySuccessVisualizer, ExpectedBinding(dummySource, dummySuccessVisualizer.port, dummySuccessVisualizer))
     pipelines should have size 1
   }
 
@@ -36,8 +36,8 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent1, visualizerComponent2), Seq())
     val pipelines = createDiscovery().discover(input).futureValue
 
-    pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent1, ExpectedBinding(sourceComponent, "PORT1", visualizerComponent1))
-    pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent2, ExpectedBinding(sourceComponent, "PORT1", visualizerComponent2))
+    pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent1, ExpectedBinding(sourceComponent, visualizerComponent1.port, visualizerComponent1))
+    pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent2, ExpectedBinding(sourceComponent, visualizerComponent2.port, visualizerComponent2))
     pipelines should have size 2
   }
 
@@ -51,13 +51,13 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
 
     pipelines shouldContainPipeline ExpectedPipeline(
       visualizerComponent,
-      ExpectedBinding(sourceComponent, analyzerComponent.port1.name, analyzerComponent),
-      ExpectedBinding(sourceComponent, analyzerComponent.port2.name, analyzerComponent),
-      ExpectedBinding(analyzerComponent, visualizerComponent.port.name, visualizerComponent)
+      ExpectedBinding(sourceComponent, analyzerComponent.port1, analyzerComponent),
+      ExpectedBinding(sourceComponent, analyzerComponent.port2, analyzerComponent),
+      ExpectedBinding(analyzerComponent, visualizerComponent.port, visualizerComponent)
     )
     pipelines shouldContainPipeline ExpectedPipeline(
       visualizerComponent,
-      ExpectedBinding(sourceComponent, visualizerComponent.port.name, visualizerComponent)
+      ExpectedBinding(sourceComponent, visualizerComponent.port, visualizerComponent)
     )
     pipelines should have size 2
   }

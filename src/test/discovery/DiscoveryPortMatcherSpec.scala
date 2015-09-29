@@ -17,7 +17,7 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
 
     matchedPipelines shouldContainPipeline ExpectedPipeline(
       visualizerComponent,
-      ExpectedBinding(sourceComponent, visualizerComponent.port.name, visualizerComponent)
+      ExpectedBinding(sourceComponent, visualizerComponent.port, visualizerComponent)
     )
     matchedPipelines should have size 1
   }
@@ -40,8 +40,8 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
 
     val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent1), buildInitialPipeline(sourceComponent2)), 1).futureValue
 
-    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent1, visualizerComponent.port.name, visualizerComponent))
-    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent2, visualizerComponent.port.name, visualizerComponent))
+    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent1, visualizerComponent.port, visualizerComponent))
+    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent2, visualizerComponent.port, visualizerComponent))
     matchedPipelines should have size 2
   }
 
@@ -54,8 +54,8 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
 
     matchedPipelines shouldContainPipeline ExpectedPipeline(
       twoPortComponent,
-      ExpectedBinding(sourceComponent, twoPortComponent.port1.name, twoPortComponent),
-      ExpectedBinding(sourceComponent, twoPortComponent.port2.name, twoPortComponent)
+      ExpectedBinding(sourceComponent, twoPortComponent.port1, twoPortComponent),
+      ExpectedBinding(sourceComponent, twoPortComponent.port2, twoPortComponent)
     )
     matchedPipelines should have size 1
   }
@@ -79,11 +79,11 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
 
     matchedPipelines shouldContainPipeline ExpectedPipeline(
       visualizerComponent,
-      ExpectedBinding(sourceComponent, twoPortComponent.port1.name, twoPortComponent),
-      ExpectedBinding(sourceComponent, twoPortComponent.port2.name, twoPortComponent),
-      ExpectedBinding(twoPortComponent, visualizerComponent.port.name, visualizerComponent)
+      ExpectedBinding(sourceComponent, twoPortComponent.port1, twoPortComponent),
+      ExpectedBinding(sourceComponent, twoPortComponent.port2, twoPortComponent),
+      ExpectedBinding(twoPortComponent, visualizerComponent.port, visualizerComponent)
     )
-    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent, visualizerComponent.port.name, visualizerComponent))
+    matchedPipelines shouldContainPipeline ExpectedPipeline(visualizerComponent, ExpectedBinding(sourceComponent, visualizerComponent.port, visualizerComponent))
     matchedPipelines should have size 2
   }
 
