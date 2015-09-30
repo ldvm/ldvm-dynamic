@@ -1,2 +1,4 @@
+![Build](https://travis-ci.org/ldvm/ldvm-dynamic.svg)
+
 # ldvm-dynamic
-Dynamic pipeline checks
+Dynamic pipeline discovery

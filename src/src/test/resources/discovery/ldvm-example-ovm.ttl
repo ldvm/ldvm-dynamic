@@ -1,0 +1,100 @@
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix sd:    <http://www.w3.org/ns/sparql-service-description#> .
+
+@prefix ldvm:  <http://linked.opendata.cz/ontology/ldvm/> .
+@prefix d-sparql: <http://linked.opendata.cz/ontology/ldvm/datasource/sparql/> .
+@prefix a-sparql:    <http://linked.opendata.cz/ontology/ldvm/analyzer/sparql/> .
+@prefix v-gmaps:    <http://linked.opendata.cz/ontology/ldvm/visualizer/gmaps/> .
+@prefix v-gmaps-r:  <http://linked.opendata.cz/resource/ldvm/visualizer/gmaps/> .
+
+### Pipeline ###
+
+<http://payola.cz/resource/pipeline/ovm/1> a ldvm:Pipeline ;
+	dcterms:title "OVM coordinates using Google Geocoder, GMaps" ;
+	rdfs:seeAlso <http://vis.payola.cz/ovm-gmaps> ;
+	ldvm:member <http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1> ;
+	ldvm:member <http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1> ;
+	ldvm:member <http://payola.cz/resource/pipeline/ovm/1/instance/visualizer/gmaps/1> ;
+	.
+
+### Datasources ###
+
+##### Datasource instance, inherits template configuration, dataport (output) instances #####
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1> a ldvm:DataSourceInstance ;
+	dcterms:title "linked.opendata.cz" ;
+	ldvm:instanceOf <http://payola.cz/resource/template/datasource/lodcz> ;
+	ldvm:outputInstance <http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1/output/1> ;
+	ldvm:componentConfigurationInstance <http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1/configuration> ;
+	.
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1/configuration> a d-sparql:SparqlEndpointDataSourceConfiguration ;
+	dcterms:title "linked.opendata.cz" ;
+	d-sparql:service <http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1/service> ;
+	.
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1/service> a sd:Service ;
+	#sd:endpoint <http://linked.opendata.cz/sparql> ;
+
+	#TODO: Is this OK? It is technically a description of a SPARQL endpoint service... not the requested named graphs... but I think it could work
+	sd:defaultDataset [
+        a sd:Dataset ;
+        sd:namedGraph [
+            a sd:NamedGraph ;
+            sd:name <http://linked.opendata.cz/resource/dataset/seznam.gov.cz/ovm> ;
+        ], [
+            a sd:NamedGraph ;
+            sd:name <http://linked.opendata.cz/resource/dataset/seznam.gov.cz/ovm/geocoordinates/google> ;
+		]
+	]
+	.
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1/output/1> a ldvm:DataPortInstance ;
+	dcterms:title "Triples output" ;
+	ldvm:dataportInstanceOf <http://payola.cz/resource/template/datasource/lodcz/dataport/output> ;
+	.
+
+### OVM analyzer instance, 2 inputs, config inherited from template ###
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1> a ldvm:AnalyzerInstance ;
+	dcterms:title "IPP analyzer" ;
+	ldvm:instanceOf <http://payola.cz/resource/template/analyzer/ovm> ;
+	ldvm:inputInstance <http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1/input/ovm> ;
+	ldvm:inputInstance <http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1/input/pos> ;
+	ldvm:outputInstance <http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1/output/1> ;
+	.
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1/input/ovm> a ldvm:DataPortInstance ;
+	dcterms:title "IPPs" ;
+	ldvm:dataportInstanceOf <http://payola.cz/resource/template/analyzer/ovm/input/ovm> ;
+	ldvm:boundTo <http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1/output/1> ;
+	.
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1/input/pos> a ldvm:DataPortInstance ;
+	dcterms:title "IPP POSs" ;
+	ldvm:dataportInstanceOf <http://payola.cz/resource/template/analyzer/ovm/input/pos> ;
+	ldvm:boundTo <http://payola.cz/resource/pipeline/ovm/1/instance/datasource/lodcz/1/output/1> ;
+	.
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1/output/1> a ldvm:DataPortInstance ;
+	dcterms:title "IPPs and POSes with geocoordinates" ;
+	ldvm:dataportInstanceOf <http://payola.cz/resource/template/analyzer/ovm/output/1> ;
+	.
+
+### GMaps visualizer - template in ldvm-v-gmaps.ttl
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/visualizer/gmaps/1> a ldvm:VisualizerInstance ;
+	dcterms:title "Google maps visualizer" ;
+	ldvm:instanceOf v-gmaps-r:GoogleMapsVisualizerTemplate ;
+	ldvm:inputInstance <http://payola.cz/resource/pipeline/ovm/1/instance/visualizer/gmaps/1/input> ;
+	.
+
+<http://payola.cz/resource/pipeline/ovm/1/instance/visualizer/gmaps/1/input> a ldvm:DataPortInstance ;
+	dcterms:title "Points and descriptions" ;
+	ldvm:dataportInstanceOf v-gmaps-r:Input ;
+	ldvm:boundTo <http://payola.cz/resource/pipeline/ovm/1/instance/analyzer/ovm/1/output/1> ;
+	.
