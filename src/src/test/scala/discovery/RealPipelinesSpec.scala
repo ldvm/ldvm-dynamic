@@ -36,11 +36,12 @@ class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
 
     pipelines shouldContainPipeline ExpectedPipeline(
       googleMaps,
-      ExpectedBinding(ruian, "PORT1", townsExtractor),
-      ExpectedBinding(townsExtractor, "PORT_GEO", ruianGeocoder),
-      ExpectedBinding(institutions, "PORT_LINK", ruianGeocoder),
-      ExpectedBinding(ruianGeocoder, "PORT1", googleMaps)
+      ExpectedBinding(ruian, townsExtractor.portName, townsExtractor),
+      ExpectedBinding(townsExtractor, ruianGeocoder.geoPortName, ruianGeocoder),
+      ExpectedBinding(institutions, ruianGeocoder.linkPortName, ruianGeocoder),
+      ExpectedBinding(ruianGeocoder, googleMaps.portName, googleMaps)
     )
+    
 
     pipelines should have size 4
   }

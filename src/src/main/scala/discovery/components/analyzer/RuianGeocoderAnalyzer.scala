@@ -7,6 +7,9 @@ import discovery.model.components.descriptor.{AskDescriptor, Descriptor}
 import scala.concurrent.Future
 
 class RuianGeocoderAnalyzer extends AnalyzerInstance {
+  val linkPortName: String = "PORT_LINK"
+  val geoPortName: String = "PORT_GEO"
+
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
     Future.successful(RdfDataSample(
       """
@@ -21,10 +24,7 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
     ))
   }
 
-  private val port1: Port = Port("PORT1", 0)
-  private val port2: Port = Port("PORT2", 0)
-
-  private val port1Descriptors = Seq(
+  private val geoPortDescriptors = Seq(
     AskDescriptor(
       """
         |   prefix xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -50,7 +50,7 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
     )
   )
 
-  private val port2Descriptors = Seq(
+  private val linkPortDescriptors = Seq(
     AskDescriptor(
       """
         |   prefix ruianlink: <http://ruian.linked.opendata.cz/ontology/links/>
@@ -65,10 +65,10 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
     super.checkAskDescriptors(port, outputDataSample)
   }
 
-  override val getInputPorts: Seq[Port] = Seq(port1, port2)
+  override val getInputPorts: Seq[Port] = Seq(Port(linkPortName, 0), Port(geoPortName, 0))
 
   override def descriptorsForPort(port: Port): Seq[Descriptor] = port match {
-    case Port(port1.name, _) => port1Descriptors
-    case Port(port2.name, _) => port2Descriptors
+    case Port(`linkPortName`, _) => linkPortDescriptors
+    case Port(`geoPortName`, _) => geoPortDescriptors
   }
 }

@@ -7,8 +7,7 @@ import discovery.model.{ComponentState, DataSample, Port, PortCheckResult}
 import scala.concurrent.Future
 
 class GoogleMapsVisualizer extends VisualizerInstance {
-
-  private val inputPort = Port("PORT1", 0)
+  val portName: String = "INPUT_PORT"
 
   private val descriptors = Seq(
     AskDescriptor(
@@ -25,13 +24,13 @@ class GoogleMapsVisualizer extends VisualizerInstance {
     )
   )
 
-  override def getInputPorts: Seq[Port] = Seq(inputPort)
+  override val getInputPorts: Seq[Port] = Seq(Port(portName, 0))
 
   override def checkPort(port: Port, state: Option[ComponentState], outputDataSample: DataSample): Future[PortCheckResult] = {
     super.checkAskDescriptors(port, outputDataSample)
   }
 
   override def descriptorsForPort(port: Port): Seq[Descriptor] = port match {
-    case Port(inputPort.name, _) => descriptors
+    case Port(`portName`, _) => descriptors
   }
 }
