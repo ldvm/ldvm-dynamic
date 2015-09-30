@@ -1,11 +1,9 @@
 package discovery
 
-import com.google.common.util.concurrent.MoreExecutors
-
 import scala.concurrent.ExecutionContext
+import ExecutionContext.Implicits.global
 
 trait DiscoveryCreator {
-  implicit val executor: ExecutionContext = ExecutionContext.fromExecutor(MoreExecutors.directExecutor())
 
   val pipelineBuilder = new PipelineBuilder()
 

@@ -3,8 +3,8 @@ package discovery.model.components
 import discovery.model._
 import discovery.model.components.descriptor.{AskDescriptor, Descriptor}
 
-import scala.concurrent.Future
-import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
 
 
 trait ComponentInstanceWithInputs extends ComponentInstance {

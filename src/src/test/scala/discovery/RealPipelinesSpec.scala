@@ -8,7 +8,7 @@ import org.scalatest.concurrent.ScalaFutures._
 
 class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
 
-  var ttlPath = "test/discovery/ttl/"
+  var ttlPath = "ttl/"
 
   "Discovery" should "discover LDOW 2015 pipeline" in {
     val ruian = new JenaDataSource(JenaUtil.modelFromTtlFile(ttlPath + "ruian.ttl"))
