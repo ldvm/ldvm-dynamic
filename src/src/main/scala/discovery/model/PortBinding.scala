@@ -1,3 +1,5 @@
 package discovery.model
 
-case class PortBinding(startComponent: PipelineComponent, endPort: Port, endComponent: PipelineComponent)
+case class PortBinding(startComponent: PipelineComponent, endPort: Port, endComponent: PipelineComponent) {
+  def prettyFormat = s"${startComponent.componentInstance} --${endPort.name}-> ${endComponent.componentInstance}"
+}

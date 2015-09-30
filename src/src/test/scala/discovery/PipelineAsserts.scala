@@ -7,7 +7,10 @@ import org.scalatest.Assertions._
 trait PipelineAsserts {
   case class ExpectedPipeline(lastComponent: ComponentInstance, bindings: ExpectedBinding*)
 
-  case class ExpectedBinding(startComponent: ComponentInstance, portName: String, endComponent: ComponentInstance)
+  case class ExpectedBinding(startComponent: ComponentInstance, portName: String, endComponent: ComponentInstance) {
+
+    override def toString: String = s"ExpectedBiding($startComponent--$portName->$endComponent)"
+  }
 
   object ExpectedBinding {
     def apply(startComponent: ComponentInstance, port: Port, endComponent: ComponentInstance) = new ExpectedBinding(startComponent, port.name, endComponent)
@@ -30,7 +33,7 @@ trait PipelineAsserts {
     private def assertHasExpectedBindings(pipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline): Seq[Pipeline] = {
       val pipelinesWithExpectedBindings = pipelines.filter(hasExpectedBindings(expectedPipeline.bindings))
       if (pipelinesWithExpectedBindings.isEmpty) {
-        fail(s"Given pipelines $pipelines\n\tdid not contain pipeline with expected bindings ${expectedPipeline.bindings}")
+        fail(s"Given pipelines ${formatPipelines(pipelines)}\n\tdo not contain pipeline with expected bindings ${expectedPipeline.bindings}")
       }
       pipelinesWithExpectedBindings
     }
@@ -38,28 +41,28 @@ trait PipelineAsserts {
     private def assertHasLastComponent(pipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline): Seq[Pipeline] = {
       val pipelinesWithExpectedLastComponent = pipelines.filter(_.lastComponent.componentInstance == expectedPipeline.lastComponent)
       if (pipelinesWithExpectedLastComponent.isEmpty) {
-        fail(s"None of pipelines $pipelines\n\t has expected last component ${expectedPipeline.lastComponent}")
+        fail(s"None of pipelines ${formatPipelines(pipelines)}\n\t has expected last component ${expectedPipeline.lastComponent}")
       }
       pipelinesWithExpectedLastComponent
     }
 
     private def assertSingleMatchingPipeline(pipelines: Seq[Pipeline], expectedPipeline: ExpectedPipeline): Pipeline = {
       if (pipelines.size > 1) {
-        fail(s"Multiple pipelines matching expected pipeline $expectedPipeline found:\n\t $pipelines")
+        fail(s"Multiple pipelines matching expected pipeline $expectedPipeline found:\n\t ${formatPipelines(pipelines)}")
       }
       pipelines.head
     }
 
     private def assertEndsWithEmptyDataSample(pipeline: Pipeline, expectedDataSample: DataSample): Unit = {
       if (expectedDataSample != pipeline.lastOutputDataSample) {
-        fail(s"Pipeline $pipeline\n\t did not end with expected data sample $expectedDataSample")
+        fail(s"Pipeline ${pipeline.prettyFormat()}\n\t did not end with expected data sample $expectedDataSample")
       }
     }
 
     private def assertUniquePipelineComponents(pipeline: Pipeline): Unit = {
       val hasUniqueComponents = pipeline.components.map(_.id).toSet.size == pipeline.components.size
       if (!hasUniqueComponents) {
-        fail(s"Pipeline $pipeline\n\t does not have all components unique: ${pipeline.components}")
+        fail(s"Pipeline ${pipeline.prettyFormat()}\n\t does not have all components unique: ${pipeline.components}")
       }
     }
 
@@ -68,7 +71,7 @@ trait PipelineAsserts {
         .flatMap { b => Seq(b.startComponent, b.endComponent) }
         .toSet
       if (pipeline.components.toSet != boundComponents) {
-        fail(s"Pipeline $pipeline\n\t contains unbound components")
+        fail(s"Pipeline ${pipeline.prettyFormat()}\n\t contains unbound components")
       }
     }
 
@@ -77,7 +80,7 @@ trait PipelineAsserts {
         val boundPorts = pipeline.bindings.filter(_.endComponent.componentInstance == componentInstance).map(_.endPort).toSet
         val unboundPorts = componentInstance.getInputPorts.filterNot(boundPorts.contains)
         if (unboundPorts.nonEmpty) {
-          fail(s"Component instance $componentInstance in pipeline $pipeline\n\t has unbound ports $unboundPorts")
+          fail(s"Component instance $componentInstance in pipeline ${pipeline.prettyFormat()}\n\t has unbound ports $unboundPorts")
         }
       }
     }
@@ -94,4 +97,7 @@ trait PipelineAsserts {
     }
   }
 
+  def formatPipelines(pipelines: Seq[Pipeline]): String = {
+    pipelines.map(_.prettyFormat("\t")).mkString("List(\n", ",\n", "\n)")
+  }
 }
