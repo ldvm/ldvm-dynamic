@@ -42,9 +42,9 @@ class PipelineAssertsSpec extends LdvmSpec {
     failsWithMessage(Seq(validPipeline, validPipeline), "Multiple pipelines matching expected pipeline")
   }
 
-  ignore should "fail with nonempty data sample" in {
-    val pipeline = Pipeline(validPipeline.components, validPipeline.bindings, validPipeline.lastComponent, EmptyDataSample)
-    failsWithMessage(Seq(pipeline), "did not end with empty data sample")
+  it should "fail with nonempty data sample" in {
+    val pipeline = Pipeline(validPipeline.components, validPipeline.bindings, validPipeline.lastComponent, RdfDataSample(""))
+    failsWithMessage(Seq(pipeline), "did not end with expected data sample")
   }
 
   it should "fail with non-unique pipeline component names" in {
