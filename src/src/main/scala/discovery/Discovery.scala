@@ -20,11 +20,11 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
   private def iterate(iterationData: IterationData): Future[Seq[Pipeline]] = {
     iterationBody(iterationData).flatMap { nextIterationData =>
       val discoveredNewPipeline = nextIterationData.givenPipelines.size > iterationData.givenPipelines.size
+      val stop = !discoveredNewPipeline || iterationData.iterationNumber == MAX_ITERATIONS
 
-      if (!discoveredNewPipeline || iterationData.iterationNumber == MAX_ITERATIONS) {
-        Future.successful(nextIterationData.completedPipelines)
-      } else {
-        iterate(nextIterationData)
+      stop match {
+        case true => Future.successful(nextIterationData.completedPipelines)
+        case false => iterate(nextIterationData)
       }
     }
   }
