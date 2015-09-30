@@ -25,13 +25,13 @@ class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
 
     pipelines shouldContainPipeline ExpectedPipeline(
       googleMaps,
-      ExpectedBinding(ruian, "PORT1", townsExtractor),
-      ExpectedBinding(townsExtractor, "PORT1", googleMaps)
+      ExpectedBinding(ruian, townsExtractor.portName, townsExtractor),
+      ExpectedBinding(townsExtractor, googleMaps.portName, googleMaps)
     )
 
     pipelines shouldContainPipeline ExpectedPipeline(
       googleMaps,
-      ExpectedBinding(ruian, "PORT1", googleMaps)
+      ExpectedBinding(ruian, googleMaps.portName, googleMaps)
     )
 
     pipelines shouldContainPipeline ExpectedPipeline(
