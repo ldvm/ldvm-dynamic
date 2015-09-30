@@ -57,7 +57,7 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
       """
         |prefix ruianlink: <http://ruian.linked.opendata.cz/ontology/links/>
         |   ASK {
-        |   ?object ruianlink:obec  ?obec .
+        |     ?object ruianlink:obec  ?obec .
         |   }
       """.stripMargin
     )

@@ -23,10 +23,9 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
     ): Future[Seq[Pipeline]] = {
     remainingPorts match {
       case Nil =>
-        if (portMatches.values.forall(_.nonEmpty)) {
-          buildPipelines(componentInstance, portMatches, iteration)
-        } else {
-          Future.successful(Seq())
+        portMatches.values.forall(_.nonEmpty) match {
+          case true => buildPipelines(componentInstance, portMatches, iteration)
+          case false => Future.successful(Seq())
         }
       case headPort :: tail =>
         tryMatchGivenPipelinesWithPort(headPort, givenPipelines, lastStates, componentInstance).flatMap { matches =>

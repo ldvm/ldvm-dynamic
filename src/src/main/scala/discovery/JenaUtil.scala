@@ -13,8 +13,7 @@ object JenaUtil {
   }
 
   def modelFromTtlFile(fileName: String): Model = {
-    val path = getClass.getResource(fileName).getPath
-    val source = scala.io.Source.fromFile(path)
+    val source = scala.io.Source.fromURL(getClass.getResource(fileName))
     val model = ModelFactory.createDefaultModel()
     for (reader <- managed(source.reader())) {
       // scalastyle:off null

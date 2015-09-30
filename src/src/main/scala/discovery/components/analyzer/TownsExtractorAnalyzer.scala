@@ -48,13 +48,13 @@ class TownsExtractorAnalyzer extends AnalyzerInstance {
   )
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
-  val source = Source.fromFile("test/discovery/ttl/ldvm-ruian-obce-datasample.ttl")
-  val content = try source.getLines().mkString finally source.close()
-  Future.successful(RdfDataSample(content))
+    val source = Source.fromURL(getClass.getResource("ldvm-ruian-obce-datasample.ttl"))
+    val content = try source.getLines().mkString finally source.close()
+    Future.successful(RdfDataSample(content))
   }
 
   override def checkPort(port: Port, state: Option[ComponentState], outputDataSample: DataSample): Future[PortCheckResult] = {
-  super.checkAskDescriptors(port, outputDataSample)
+    super.checkAskDescriptors(port, outputDataSample)
   }
 
   override def getInputPorts: Seq[Port] = Seq(input)
