@@ -13,9 +13,11 @@ object JenaUtil {
   }
 
   def modelFromTtlFile(fileName: String): Model = {
-    val source = scala.io.Source.fromURL(getClass.getResource(fileName))
     val model = ModelFactory.createDefaultModel()
-    for (reader <- managed(source.reader())) {
+    for (
+      source <- managed(scala.io.Source.fromFile(fileName));
+      reader <- managed(source.reader())
+    ) {
       // scalastyle:off null
       model.read(reader, null, "TTL")
       // scalastyle:on null
