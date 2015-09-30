@@ -1,13 +1,13 @@
 package discovery
 
+import com.typesafe.scalalogging.StrictLogging
 import discovery.model._
 import discovery.model.components.DataSourceInstance
 import discovery.model.internal.IterationData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuilder)(implicit executor: ExecutionContext) {
-
+class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuilder)(implicit executor: ExecutionContext) extends StrictLogging {
   val MAX_ITERATIONS = 10
 
   def discover(input: DiscoveryInput): Future[Seq[Pipeline]] = {
@@ -37,10 +37,12 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
       val newPipelines = rawPipelines.view.flatten
         .filterNot(containsComponentBoundToItself)
         .filter(containsBindingToIteration(iterationData.iterationNumber - 1))
-      val (completePipelines, incompletePipelines) = newPipelines.partition(_.isComplete)
+      val (completePipelines, partialPipelines) = newPipelines.partition(_.isComplete)
+
+      logger.info(s"Discovered ${completePipelines.size} new complete pipeline(s) and ${partialPipelines.size} new partial pipeline(s) in iteration ${iterationData.iterationNumber}")
 
       IterationData(
-        iterationData.givenPipelines ++ incompletePipelines,
+        iterationData.givenPipelines ++ partialPipelines,
         iterationData.completedPipelines ++ completePipelines,
         iterationData.possibleComponents,
         iterationData.iterationNumber + 1
