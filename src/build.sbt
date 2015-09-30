@@ -5,7 +5,6 @@ lazy val root = (project in file(".")).
     scalaVersion := "2.11.7"
   )
 
-
 libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.11" % "2.2.5" % Test,
   "org.apache.jena" % "jena" % "2.13.0",

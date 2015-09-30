@@ -14,13 +14,13 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
   }
 
   private def tryMatchPorts(
-                             remainingPorts: Seq[Port],
-                             givenPipelines: Seq[Pipeline],
-                             portMatches: Map[Port, Seq[PortMatch]],
-                             lastStates: Seq[Option[ComponentState]],
-                             iteration: Int,
-                             componentInstance: ComponentInstanceWithInputs
-                             ): Future[Seq[Pipeline]] = {
+    remainingPorts: Seq[Port],
+    givenPipelines: Seq[Pipeline],
+    portMatches: Map[Port, Seq[PortMatch]],
+    lastStates: Seq[Option[ComponentState]],
+    iteration: Int,
+    componentInstance: ComponentInstanceWithInputs
+    ): Future[Seq[Pipeline]] = {
     remainingPorts match {
       case Nil =>
         if (portMatches.values.forall(_.nonEmpty)) {
@@ -35,7 +35,10 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
     }
   }
 
-  private def tryMatchGivenPipelinesWithPort(port: Port, givenPipelines: Seq[Pipeline], lastStates: Seq[Option[ComponentState]], componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
+  private def tryMatchGivenPipelinesWithPort(
+    port: Port, givenPipelines: Seq[Pipeline],
+    lastStates: Seq[Option[ComponentState]],
+    componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
     val eventualMaybeMatches = Future.sequence {
       for (
         pipeline <- givenPipelines;

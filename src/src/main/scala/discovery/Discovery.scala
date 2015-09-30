@@ -38,7 +38,13 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
         .filterNot(containsComponentBoundToItself)
         .filter(containsBindingToIteration(iterationData.iterationNumber - 1))
       val (completePipelines, incompletePipelines) = newPipelines.partition(_.isComplete)
-      IterationData(iterationData.givenPipelines ++ incompletePipelines, iterationData.completedPipelines ++ completePipelines, iterationData.possibleComponents, iterationData.iterationNumber + 1)
+
+      IterationData(
+        iterationData.givenPipelines ++ incompletePipelines,
+        iterationData.completedPipelines ++ completePipelines,
+        iterationData.possibleComponents,
+        iterationData.iterationNumber + 1
+      )
     }
   }
 

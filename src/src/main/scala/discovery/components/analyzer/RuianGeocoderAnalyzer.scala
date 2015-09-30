@@ -29,25 +29,25 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
   private val port1Descriptors = Seq(
     AskDescriptor(
       """
-        |		prefix xsd:	<http://www.w3.org/2001/XMLSchema#>
-        |		prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        |		prefix skos:	<http://www.w3.org/2004/02/skos/core#>
-        |		prefix s:	<http://schema.org/>
-        |		prefix ogcgml:	<http://www.opengis.net/ont/gml#>
-        |		prefix ruian:	<http://ruian.linked.opendata.cz/ontology/>
-        |		ASK {
-        |		?object
-        |			ruian:definicniBod	?definicniBod .
+        |   prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+        |   prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        |   prefix skos:  <http://www.w3.org/2004/02/skos/core#>
+        |   prefix s: <http://schema.org/>
+        |   prefix ogcgml:  <http://www.opengis.net/ont/gml#>
+        |   prefix ruian: <http://ruian.linked.opendata.cz/ontology/>
+        |   ASK {
+        |   ?object
+        |     ruian:definicniBod  ?definicniBod .
         |
-        |		?definicniBod	rdf:type	ogcgml:MultiPoint ;
-        |			ogcgml:pointMember	?pointMember .
+        |   ?definicniBod rdf:type  ogcgml:MultiPoint ;
+        |     ogcgml:pointMember  ?pointMember .
         |
-        |		?pointMember rdf:type	ogcgml:Point ;
-        |			s:geo ?geo .
-        |		?geo	rdf:type	s:GeoCoordinates ;
-        |			s:longitude	?lng ;
-        |			s:latitude	?lat .
-        |		}
+        |   ?pointMember rdf:type ogcgml:Point ;
+        |     s:geo ?geo .
+        |   ?geo  rdf:type  s:GeoCoordinates ;
+        |     s:longitude ?lng ;
+        |     s:latitude  ?lat .
+        |   }
       """.stripMargin
     )
   )
@@ -56,9 +56,9 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
     AskDescriptor(
       """
         |prefix ruianlink: <http://ruian.linked.opendata.cz/ontology/links/>
-        |		ASK {
-        |		?object	ruianlink:obec	?obec .
-        |		}
+        |   ASK {
+        |   ?object ruianlink:obec  ?obec .
+        |   }
       """.stripMargin
     )
   )

@@ -15,12 +15,12 @@ class GoogleMapsVisualizer extends VisualizerInstance {
       """
         |PREFIX s: <http://schema.org/>
         |
-        |		ASK {
-        |			?something s:geo ?g .
-        |			?g a s:GeoCoordinates ;
-        |				s:latitude ?lat ;
-        |				s:longitude ?lng .
-        |		}
+        |    ASK {
+        |      ?something s:geo ?g .
+        |      ?g a s:GeoCoordinates ;
+        |        s:latitude ?lat ;
+        |        s:longitude ?lng .
+        |    }
       """.stripMargin
     )
   )
