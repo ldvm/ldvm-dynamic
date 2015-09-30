@@ -8,7 +8,7 @@ import org.scalatest.concurrent.ScalaFutures._
 
 class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
 
-  "Discovery" should "discover LDOW 2015 pipeline" in {
+  "Discovery" should "discover LDOW 2015 pipelines for IPP and RUIAN" in {
     val ruian = new JenaDataSource(JenaUtil.modelFromTtlFile("ruian.ttl"))
     val institutions = new JenaDataSource(JenaUtil.modelFromTtlFile("ipp.ttl"))
     val googleMaps = new GoogleMapsVisualizer()
@@ -34,14 +34,15 @@ class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
       ExpectedBinding(ruian, "PORT1", googleMaps)
     )
 
-    /*pipelines shouldContainPipeline ExpectedPipeline(
+    pipelines shouldContainPipeline ExpectedPipeline(
       googleMaps,
       ExpectedBinding(ruian, "PORT1", townsExtractor),
       ExpectedBinding(townsExtractor, "PORT1", ruianGeocoder),
       ExpectedBinding(institutions, "PORT2", ruianGeocoder),
       ExpectedBinding(ruianGeocoder, "PORT1", googleMaps)
-    )*/
-    pipelines should have size 2
+    )
+
+    pipelines should have size 3
   }
 
 }
