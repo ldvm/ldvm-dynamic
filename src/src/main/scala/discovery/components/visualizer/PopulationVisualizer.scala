@@ -11,5 +11,5 @@ class PopulationVisualizer extends VisualizerInstance {
 
   override def getInputPorts: Seq[Port] = ???
 
-  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = ???
+  override def descriptorsForPort(port: Port): Seq[Descriptor] = ???
 }

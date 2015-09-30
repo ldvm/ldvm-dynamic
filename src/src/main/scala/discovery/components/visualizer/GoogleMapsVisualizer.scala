@@ -31,5 +31,7 @@ class GoogleMapsVisualizer extends VisualizerInstance {
     super.checkAskDescriptors(port, outputDataSample)
   }
 
-  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = Map(inputPort -> descriptors)
+  override def descriptorsForPort(port: Port): Seq[Descriptor] = port match {
+    case Port(inputPort.name, _) => descriptors
+  }
 }

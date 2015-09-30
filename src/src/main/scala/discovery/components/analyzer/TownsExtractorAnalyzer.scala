@@ -9,7 +9,7 @@ import scala.io.Source
 
 class TownsExtractorAnalyzer extends AnalyzerInstance {
 
-  private val input = Port("PORT1", 0)
+  private val inputPort = Port("PORT1", 0)
 
   private val descriptors = Seq(
     AskDescriptor(
@@ -57,7 +57,9 @@ class TownsExtractorAnalyzer extends AnalyzerInstance {
     super.checkAskDescriptors(port, outputDataSample)
   }
 
-  override def getInputPorts: Seq[Port] = Seq(input)
+  override def getInputPorts: Seq[Port] = Seq(inputPort)
 
-  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = Map(input -> descriptors)
+  override def descriptorsForPort(port: Port): Seq[Descriptor] = port match {
+    case Port(inputPort.name, _) => descriptors
+  }
 }

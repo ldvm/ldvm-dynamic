@@ -17,5 +17,5 @@ class DummyVisualizer(expectedPortCheckResult: Status) extends VisualizerInstanc
 
   override def getInputPorts = Seq(port)
 
-  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = Map(port -> Seq())
+  override def descriptorsForPort(port: Port): Seq[Descriptor] = Seq()
 }

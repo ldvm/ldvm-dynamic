@@ -13,11 +13,11 @@ trait ComponentInstanceWithInputs extends ComponentInstance {
 
   def getInputPorts : Seq[Port]
 
-  def getDescriptorsByPort : Map[Port, Seq[Descriptor]]
+  def descriptorsForPort(port: Port): Seq[Descriptor]
 
   def checkAskDescriptors(port: Port, dataSample: DataSample) : Future[PortCheckResult] = {
 
-    val mandatoryDescriptors = getDescriptorsByPort(port).filter(_.isMandatory)
+    val mandatoryDescriptors =  descriptorsForPort(port).filter(_.isMandatory)
 
     val eventuallyDescriptorChecks = Future.sequence(mandatoryDescriptors.map {
       case d: AskDescriptor => dataSample.executeAsk(d)

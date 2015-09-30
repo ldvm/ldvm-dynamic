@@ -18,5 +18,5 @@ class DummyTransformer(expectedPortCheckResult: Status) extends TransformerInsta
 
   override val getInputPorts: Seq[Port] = Seq(port)
 
-  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = Map(port -> Seq())
+  override def descriptorsForPort(port: Port): Seq[Descriptor] = Seq()
 }

@@ -21,10 +21,8 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
     ))
   }
 
-  private val ports = Seq(
-    Port("PORT_GEO", 0),
-    Port("PORT_LINK", 0)
-  )
+  private val port1: Port = Port("PORT1", 0)
+  private val port2: Port = Port("PORT2", 0)
 
   private val port1Descriptors = Seq(
     AskDescriptor(
@@ -67,12 +65,10 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
     super.checkAskDescriptors(port, outputDataSample)
   }
 
-  override def getInputPorts: Seq[Port] = ports
+  override val getInputPorts: Seq[Port] = Seq(port1, port2)
 
-  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = {
-    Map(
-      ports.head -> port1Descriptors,
-      ports.last -> port2Descriptors
-    )
+  override def descriptorsForPort(port: Port): Seq[Descriptor] = port match {
+    case Port(port1.name, _) => port1Descriptors
+    case Port(port2.name, _) => port2Descriptors
   }
 }

@@ -17,5 +17,5 @@ class DummyTwoPortVisualizer extends VisualizerInstance {
 
   override val getInputPorts = Seq(port1, port2)
 
-  override def getDescriptorsByPort: Map[Port, Seq[Descriptor]] = Map(port1 -> Seq(), port2 -> Seq())
+  override def descriptorsForPort(port: Port): Seq[Descriptor] = Seq()
 }
