@@ -1,11 +1,11 @@
 package discovery.components.analyzer
 
+import discovery.JenaUtil
 import discovery.model._
 import discovery.model.components.AnalyzerInstance
 import discovery.model.components.descriptor.{AskDescriptor, Descriptor}
 
 import scala.concurrent.Future
-import scala.io.Source
 
 class TownsExtractorAnalyzer extends AnalyzerInstance {
   val portName: String = "INPUT_PORT"
@@ -47,9 +47,8 @@ class TownsExtractorAnalyzer extends AnalyzerInstance {
   )
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
-    val source = Source.fromURL(getClass.getResource("ldvm-ruian-obce-datasample.ttl"))
-    val content = try source.getLines().mkString finally source.close()
-    Future.successful(RdfDataSample(content))
+    val filePath = getClass.getResource("ldvm-ruian-obce-datasample.ttl").getFile
+    Future.successful(ModelDataSample(JenaUtil.modelFromTtlFile(filePath)))
   }
 
   override def checkPort(port: Port, state: Option[ComponentState], outputDataSample: DataSample): Future[PortCheckResult] = {

@@ -32,9 +32,10 @@ case class ModelDataSample(model: Model) extends DataSample {
 }
 
 case class RdfDataSample(rdfData: String) extends DataSample {
+  private val innerModel = ModelDataSample(JenaUtil.modelFromTtl(rdfData))
+
   override def executeAsk(descriptor: AskDescriptor): Future[Boolean] = {
-    val model = JenaUtil.modelFromTtl(rdfData)
-    ModelDataSample(model).executeAsk(descriptor)
+    innerModel.executeAsk(descriptor)
   }
 
   override def executeSelect(query: SelectDescriptor): Future[Boolean] = ???
