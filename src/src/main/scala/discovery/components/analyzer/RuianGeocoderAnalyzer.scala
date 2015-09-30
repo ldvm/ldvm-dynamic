@@ -15,15 +15,15 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
         | <http://example.com/entity/geo> s:geo [
         |   a s:GeoCoordinates ;
         |   s:latitude 15.13 ;
-        |   s:longitude 50.72 .
+        |   s:longitude 50.72
         | ] .
       """.stripMargin
     ))
   }
 
   private val ports = Seq(
-    Port("PORT1", 0),
-    Port("PORT2", 0)
+    Port("PORT_GEO", 0),
+    Port("PORT_LINK", 0)
   )
 
   private val port1Descriptors = Seq(
@@ -55,7 +55,7 @@ class RuianGeocoderAnalyzer extends AnalyzerInstance {
   private val port2Descriptors = Seq(
     AskDescriptor(
       """
-        |prefix ruianlink: <http://ruian.linked.opendata.cz/ontology/links/>
+        |   prefix ruianlink: <http://ruian.linked.opendata.cz/ontology/links/>
         |   ASK {
         |     ?object ruianlink:obec  ?obec .
         |   }

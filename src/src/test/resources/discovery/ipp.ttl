@@ -12,6 +12,13 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
+
+
+@prefix ns0:	<http://ruian.linked.opendata.cz/ontology/links/> .
+@prefix ns1:	<http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/> .
+ns1:ABrezina	ns0:obec	<http://ruian.linked.opendata.cz/resource/obce/554782> .
+
+
 	<http://linked.opendata.cz/resource/business-entity/CZ00088455> a gr:BusinessEntity , s:Organization ;
 		adms:identifier <http://linked.opendata.cz/resource/business-entity/CZ00088455/identifier/fromOvmDetail> , <http://linked.opendata.cz/resource/domain/seznam.gov.cz/ovm/ovms/SprvKrknNP/identifier/fromOvmList> .
 
