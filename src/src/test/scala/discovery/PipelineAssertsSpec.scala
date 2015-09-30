@@ -30,7 +30,7 @@ class PipelineAssertsSpec extends LdvmSpec {
 
   it should "fail with unexpected bindings" in {
     val pipeline = validPipeline.copy(bindings = Seq(PortBinding(visualizerComponent, expectedVisualizer.port, sourceComponent)))
-    failsWithMessage(Seq(pipeline), "did not contain pipeline with expected bindings")
+    failsWithMessage(Seq(pipeline), "do not contain pipeline with expected bindings")
   }
 
   it should "fail with unexpected last component" in {
@@ -44,7 +44,7 @@ class PipelineAssertsSpec extends LdvmSpec {
 
   it should "fail with nonempty data sample" in {
     val pipeline = Pipeline(validPipeline.components, validPipeline.bindings, validPipeline.lastComponent, RdfDataSample(""))
-    failsWithMessage(Seq(pipeline), "did not end with expected data sample")
+    failsWithMessage(Seq(pipeline), "do not end with expected data sample")
   }
 
   it should "fail with non-unique pipeline component names" in {

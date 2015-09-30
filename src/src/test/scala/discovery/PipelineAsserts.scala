@@ -55,7 +55,7 @@ trait PipelineAsserts {
 
     private def assertEndsWithEmptyDataSample(pipeline: Pipeline, expectedDataSample: DataSample): Unit = {
       if (expectedDataSample != pipeline.lastOutputDataSample) {
-        fail(s"Pipeline ${pipeline.prettyFormat()}\n\t did not end with expected data sample $expectedDataSample")
+        fail(s"Pipeline ${pipeline.prettyFormat()}\n\t do not end with expected data sample $expectedDataSample")
       }
     }
 
