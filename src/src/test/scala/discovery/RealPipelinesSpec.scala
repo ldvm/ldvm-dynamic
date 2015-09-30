@@ -9,8 +9,8 @@ import org.scalatest.concurrent.ScalaFutures._
 class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
 
   "Discovery" should "discover LDOW 2015 pipelines for IPP and RUIAN" in {
-    val ruian = new JenaDataSource(JenaUtil.modelFromTtlFile(getClass.getResource("ruian.ttl").getPath))
-    val institutions = new JenaDataSource(JenaUtil.modelFromTtlFile(getClass.getResource("ipp.ttl").getPath))
+    val ruian = new JenaDataSource(JenaUtil.modelFromTtlFile(getClass.getResource("ruian.ttl").getPath), "ruian")
+    val institutions = new JenaDataSource(JenaUtil.modelFromTtlFile(getClass.getResource("ipp.ttl").getPath), "institutions")
     val googleMaps = new GoogleMapsVisualizer()
     val townsExtractor = new TownsExtractorAnalyzer()
     val ruianGeocoder = new RuianGeocoderAnalyzer()

@@ -35,8 +35,8 @@ class DiscoveryPortMatcherSpec extends LdvmSpec with DiscoveryCreator {
 
   it should "discover two possible pipelines" in {
     val portMatcher = createPortMatcher()
-    val sourceComponent1 = new JenaDataSource(ModelFactory.createDefaultModel())
-    val sourceComponent2 = new JenaDataSource(ModelFactory.createDefaultModel())
+    val sourceComponent1 = new JenaDataSource(ModelFactory.createDefaultModel(), "source1")
+    val sourceComponent2 = new JenaDataSource(ModelFactory.createDefaultModel(), "source2")
     val visualizerComponent = new DummyVisualizer(Status.Success)
 
     val matchedPipelines: Seq[Pipeline] = portMatcher.tryMatchPorts(visualizerComponent, Seq(buildInitialPipeline(sourceComponent1), buildInitialPipeline(sourceComponent2)), 1).futureValue
