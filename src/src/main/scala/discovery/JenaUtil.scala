@@ -15,7 +15,7 @@ object JenaUtil {
   def modelFromTtlFile(fileName: String): Model = {
     val model = ModelFactory.createDefaultModel()
     for (
-      source <- managed(scala.io.Source.fromFile(fileName));
+      source <- managed(scala.io.Source.fromURL(getClass.getResource(fileName)));
       reader <- managed(source.reader())
     ) {
       // scalastyle:off null
