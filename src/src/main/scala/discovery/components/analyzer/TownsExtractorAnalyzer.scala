@@ -47,7 +47,7 @@ class TownsExtractorAnalyzer extends AnalyzerInstance {
   )
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
-    val filePath = getClass.getResource("ldvm-ruian-obce-datasample.ttl").getFile
+    val filePath = getClass.getResource("ldvm-ruian-obce-datasample.ttl")
     Future.successful(ModelDataSample(JenaUtil.modelFromTtlFile(filePath)))
   }
 
