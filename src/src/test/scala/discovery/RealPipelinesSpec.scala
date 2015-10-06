@@ -1,8 +1,9 @@
 package discovery
 
-import discovery.components.analyzer.{RuianGeocoderAnalyzer, TownsExtractorAnalyzer}
+import discovery.components.analyzer.{ClassBasedLinker, RuianGeocoderAnalyzer, TownsExtractorAnalyzer}
 import discovery.components.datasource.JenaDataSource
-import discovery.components.visualizer.GoogleMapsVisualizer
+import discovery.components.transformer.PopulationTransformer
+import discovery.components.visualizer.{PopulationVisualizer, GoogleMapsVisualizer}
 import discovery.model.DiscoveryInput
 import org.scalatest.concurrent.ScalaFutures._
 
@@ -50,6 +51,32 @@ class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
     )
 
     pipelines should have size 4
+  }
+
+  ignore should "discover population visualization pipelines" in {
+    val ruian = new JenaDataSource(PopulationModels.ruian, "Ruian")
+    val dbpedia = new JenaDataSource(PopulationModels.dbpedia, "DBPedia")
+    val ruianDbpediaLinks = new JenaDataSource(PopulationModels.ruianDbpediaLinks)
+    val linker = new ClassBasedLinker()
+    val populationTransformer = new PopulationTransformer()
+    val populationVisualizer = new PopulationVisualizer()
+
+    val input = new DiscoveryInput(
+      Seq(ruian, dbpedia, ruianDbpediaLinks),
+      Seq(populationVisualizer),
+      Seq(linker, populationTransformer)
+    )
+
+    val pipelines = createDiscovery().discover(input).futureValue
+
+    pipelines shouldContainPipeline ExpectedPipeline(
+      populationVisualizer,
+      ExpectedBinding(ruian, linker.dataSource1PortName, linker),
+      ExpectedBinding(dbpedia, linker.dataSource2PortName, linker),
+      ExpectedBinding(ruianDbpediaLinks, linker.linksPortName, linker),
+      ExpectedBinding(linker, populationTransformer.portName, populationTransformer),
+      ExpectedBinding(populationTransformer, populationVisualizer.portName, populationVisualizer)
+    )
   }
 
 }

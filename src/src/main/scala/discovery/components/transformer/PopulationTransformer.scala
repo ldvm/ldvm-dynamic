@@ -7,6 +7,8 @@ import discovery.model.components.descriptor.Descriptor
 import scala.concurrent.Future
 
 class PopulationTransformer extends TransformerInstance {
+  val portName = "INPUT"
+
   override def checkPort(port: Port, state: Option[ComponentState], outputDataSample: DataSample): Future[PortCheckResult] = ???
 
   override def getInputPorts: Seq[Port] = ???

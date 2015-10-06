@@ -8,6 +8,7 @@ object PopulationModels {
     """
       | PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       | PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      | PREFIX owl: <http://www.w3.org/2002/07/owl#>
       | PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     """.stripMargin
 
@@ -49,5 +50,13 @@ object PopulationModels {
       """.stripMargin
   )
 
+  val ruianDbpediaLinks = JenaUtil.modelFromTtl(
+    commonPrefixes +
+    """
+      | <http://ruian.linked.opendata.cz/resource/obce/554782> owl:sameAs <http://dbpedia.org/resource/Prague> .
+      | <http://ruian.linked.opendata.cz/resource/obce/554782> rdf:type <http://ruian.linked.opendata.cz/ontology/Obec> .
+      | <http://dbpedia.org/resource/Prague> rdf:type <http://schema.org/City> .
+    """.stripMargin // TODO: specify linked classes differently, in metadata global for entire dataset??
+  )
 
 }
