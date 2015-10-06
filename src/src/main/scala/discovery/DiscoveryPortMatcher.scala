@@ -1,12 +1,13 @@
 package discovery
 
+import com.typesafe.scalalogging.LazyLogging
 import discovery.model.PortCheckResult.Status
 import discovery.model._
 import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: ExecutionContext) {
+class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: ExecutionContext) extends LazyLogging {
 
   def tryMatchPorts(componentInstance: ComponentInstanceWithInputs, givenPipelines: Seq[Pipeline], iteration: Int): Future[Seq[Pipeline]] = {
     val ports = componentInstance.getInputPorts.sortBy(_.priority)
@@ -35,7 +36,8 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
   }
 
   private def tryMatchGivenPipelinesWithPort(
-    port: Port, givenPipelines: Seq[Pipeline],
+    port: Port,
+    givenPipelines: Seq[Pipeline],
     lastStates: Seq[Option[ComponentState]],
     componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
     val eventualMaybeMatches = Future.sequence {
@@ -46,6 +48,9 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
         val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
         eventualCheckResult.map {
           case c: PortCheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
+          case c: PortCheckResult if c.status == Status.Error =>
+            logger.error("Failed matching port {} of {} with error", port, componentInstance)
+            None
           case _ => None
         }
       }
