@@ -33,6 +33,4 @@ class DummyTwoPortAnalyzer extends AnalyzerInstance {
   }
 
   override val getInputPorts: Seq[Port] = Seq(port1, port2)
-
-  override def descriptorsForPort(port: Port): Seq[Descriptor] = Seq()
 }

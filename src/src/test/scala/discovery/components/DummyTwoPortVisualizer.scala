@@ -16,6 +16,4 @@ class DummyTwoPortVisualizer extends VisualizerInstance {
   }
 
   override val getInputPorts = Seq(port1, port2)
-
-  override def descriptorsForPort(port: Port): Seq[Descriptor] = Seq()
 }

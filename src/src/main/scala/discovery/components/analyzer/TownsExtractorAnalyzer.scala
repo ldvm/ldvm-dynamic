@@ -1,17 +1,17 @@
 package discovery.components.analyzer
 
 import discovery.JenaUtil
+import discovery.components.common.DescriptorChecker
 import discovery.model._
 import discovery.model.components.AnalyzerInstance
 import discovery.model.components.descriptor.{AskDescriptor, Descriptor}
 
 import scala.concurrent.Future
 
-class TownsExtractorAnalyzer extends AnalyzerInstance {
+class TownsExtractorAnalyzer extends AnalyzerInstance with DescriptorChecker {
   val portName: String = "INPUT_PORT"
 
-  private val descriptors = Seq(
-    AskDescriptor(
+  private val descriptor = AskDescriptor(
       """
       |   prefix xsd:  <http://www.w3.org/2001/XMLSchema#>
       |    prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -43,7 +43,6 @@ class TownsExtractorAnalyzer extends AnalyzerInstance {
       |    ?pou s:name ?pouname .
       |    }
       """.stripMargin
-    )
   )
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
@@ -52,12 +51,8 @@ class TownsExtractorAnalyzer extends AnalyzerInstance {
   }
 
   override def checkPort(port: Port, state: Option[ComponentState], outputDataSample: DataSample): Future[PortCheckResult] = {
-    super.checkAskDescriptors(port, outputDataSample)
+    checkStatelessDescriptors(outputDataSample, descriptor)
   }
 
   override val getInputPorts: Seq[Port] = Seq(Port(portName, 0))
-
-  override def descriptorsForPort(port: Port): Seq[Descriptor] = port match {
-    case Port(`portName`, _) => descriptors
-  }
 }

@@ -12,6 +12,4 @@ class Linker extends AnalyzerInstance{
   override def getInputPorts: Seq[Port] = ???
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = ???
-
-  override def descriptorsForPort(port: Port): Seq[Descriptor] = ???
 }
