@@ -53,7 +53,7 @@ class RealPipelinesSpec extends LdvmSpec with DiscoveryCreator {
     pipelines should have size 4
   }
 
-  it should "discover population visualization pipelines" in {
+  ignore should "discover population visualization pipelines" in {
     val ruian = new JenaDataSource(PopulationModels.ruian, "Ruian")
     val dbpedia = new JenaDataSource(PopulationModels.dbpedia, "DBPedia")
     val ruianDbpediaLinks = new JenaDataSource(PopulationModels.ruianDbpediaLinks)
