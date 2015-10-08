@@ -45,5 +45,21 @@ class PopulationTransformer extends TransformerInstance with DescriptorChecker {
 
   override def getInputPorts: Seq[Port] = Seq(Port(portName, 0))
 
-  override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = ???
+  override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
+    Future.successful(RdfDataSample(
+      """
+        | PREFIX s: <http://schema.org/>
+        | PREFIX dbo: <http://dbpedia.org/ontology/>
+        | PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        |
+        | <http://dbpedia.org/page/Brno> rdf:type dbo:PopulatedPlace ;
+        |     dbo:populationTotal 385913^^xsd:integer ;
+        |     rdf:type s:Place ;
+        |     s:geo [
+        |       rdf:type s:GeoCoordinates ;
+        |       s:longitude ?lng ;
+        |       s:latitude  ?lat
+        |     ] .
+      """.stripMargin))
+  }
 }
