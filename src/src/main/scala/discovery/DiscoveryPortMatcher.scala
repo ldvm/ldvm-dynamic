@@ -41,10 +41,10 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
     lastStates: Seq[Option[ComponentState]],
     componentInstance: ComponentInstanceWithInputs): Future[Seq[PortMatch]] = {
     val eventualMaybeMatches = Future.sequence {
-      for (
-        pipeline <- givenPipelines;
+      for {
+        pipeline <- givenPipelines if !pipeline.endsWith(componentInstance)
         state <- lastStates
-      ) yield {
+      } yield {
         val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
         eventualCheckResult.map {
           case c: PortCheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
@@ -60,6 +60,7 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
 
   private def buildPipelines(componentInstance: ComponentInstance, portMatches: Map[Port, Seq[PortMatch]], iteration: Int): Future[Seq[Pipeline]] = {
     val allCombinations = combine(portMatches.values)
+    logger.info(s"All portMatches count: ${portMatches.values.flatten.size}; combinations: ${allCombinations.size}.")
     Future.sequence(
       allCombinations.map { portSolutions => pipelineBuilder.buildPipeline(componentInstance, portSolutions, iteration) }
     )

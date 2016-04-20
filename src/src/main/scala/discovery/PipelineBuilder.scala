@@ -12,7 +12,6 @@ class PipelineBuilder(implicit executor: ExecutionContext) {
 
   def buildPipeline(componentInstance: ComponentInstance, portMatches: Seq[PortMatch], discoveryIteration: Int): Future[Pipeline] = {
     val newLastComponent = newComponent(componentInstance, discoveryIteration)
-    val dataSamples = portMatches.map(portMatch => portMatch.port -> portMatch.startPipeline.lastOutputDataSample).toMap
     val eventuallyDataSample: Future[DataSample] = dataSample(componentInstance, portMatches)
     eventuallyDataSample.map { dataSample =>
       Pipeline(

@@ -3,12 +3,14 @@ package discovery.components.transformer
 import discovery.components.common.DescriptorChecker
 import discovery.model._
 import discovery.model.components.TransformerInstance
-import discovery.model.components.descriptor.AskDescriptor
+import discovery.model.components.descriptor.{AskDescriptor, ConstructDescriptor}
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class PopulationTransformer extends TransformerInstance with DescriptorChecker {
   val portName = "INPUT"
+  val port = Port(portName, 0)
 
   private val descriptor = AskDescriptor(
     """
@@ -18,13 +20,11 @@ class PopulationTransformer extends TransformerInstance with DescriptorChecker {
       |prefix ruian: <http://ruian.linked.opendata.cz/ontology/>
       |prefix ruianlink: <http://ruian.linked.opendata.cz/ontology/links/>
       |PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      |PREFIX owl: <http://www.w3.org/2002/07/owl#>
       |
       |    ASK {
       |      ?p a dbo:PopulatedPlace ;
       |         dbo:populationTotal ?population ;
-      |         ruianlink:obec ?object .
-      |
-      |      ?object
       |         ruian:definicniBod  ?definicniBod .
       |
       |      ?definicniBod rdf:type  ogcgml:MultiPoint ;
@@ -43,23 +43,50 @@ class PopulationTransformer extends TransformerInstance with DescriptorChecker {
     checkStatelessDescriptors(outputDataSample, descriptor)
   }
 
-  override def getInputPorts: Seq[Port] = Seq(Port(portName, 0))
+  override def getInputPorts: Seq[Port] = Seq(port)
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
-    Future.successful(RdfDataSample(
+    dataSamples(port).executeConstruct(ConstructDescriptor(
       """
         | PREFIX s: <http://schema.org/>
         | PREFIX dbo: <http://dbpedia.org/ontology/>
+        | PREFIX dbp: <http://dbpedia.org/property/>
         | PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        | PREFIX ruian: <http://ruian.linked.opendata.cz/ontology/>
+        | PREFIX ogcgml:  <http://www.opengis.net/ont/gml#>
         |
-        | <http://dbpedia.org/page/Brno> rdf:type dbo:PopulatedPlace ;
-        |     dbo:populationTotal 385913^^xsd:integer ;
+        | CONSTRUCT {
+        |  ?p a dbo:PopulatedPlace ;
+        |     a ?type ;
+        |     dbo:populationTotal ?population ;
         |     rdf:type s:Place ;
+        |     s:name ?name ;
         |     s:geo [
         |       rdf:type s:GeoCoordinates ;
         |       s:longitude ?lng ;
         |       s:latitude  ?lat
         |     ] .
-      """.stripMargin))
+        | } WHERE {
+        |  ?p a dbo:PopulatedPlace ;
+        |     dbp:officialName ?name ;
+        |     dbo:populationTotal ?population ;
+        |     ruian:definicniBod ?definicniBod .
+        |
+        |  OPTIONAL { ?p a ?type . }
+        |
+        |  ?definicniBod rdf:type ogcgml:MultiPoint ;
+        |     ogcgml:pointMember ?pointMember .
+        |
+        |  ?pointMember rdf:type ogcgml:Point ;
+        |     s:geo ?geo .
+        |  ?geo rdf:type s:GeoCoordinates ;
+        |     s:longitude ?lng ;
+        |     s:latitude ?lat .
+        | }
+        |
+      """.stripMargin)).map{ m =>
+      val s = ModelDataSample(m)
+      s
+    }
   }
 }

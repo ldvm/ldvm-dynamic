@@ -19,7 +19,8 @@ trait DescriptorChecker {
 
     val eventuallyPortCheckResult: Future[PortCheckResult] = eventuallyDescriptorChecks.map { descriptorCheckResults =>
       PortCheckResult(
-        descriptorCheckResults.forall(identity)
+        descriptorCheckResults.forall(identity),
+        None
       )
     }
 

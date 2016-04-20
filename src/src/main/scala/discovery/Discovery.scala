@@ -18,6 +18,9 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
   }
 
   private def iterate(iterationData: IterationData): Future[Seq[Pipeline]] = {
+
+    logger.info(s"Starting iteration ${iterationData.iterationNumber}.")
+
     iterationBody(iterationData).flatMap { nextIterationData =>
       val discoveredNewPipeline = nextIterationData.givenPipelines.size > iterationData.givenPipelines.size
       val stop = !discoveredNewPipeline || iterationData.iterationNumber == MAX_ITERATIONS
@@ -33,17 +36,25 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
     val eventualPipelines = Future.sequence {
       iterationData.possibleComponents.map { c => portMatcher.tryMatchPorts(c, iterationData.givenPipelines, iterationData.iterationNumber) }
     }
-    eventualPipelines.map { rawPipelines =>
-      val newPipelines = rawPipelines.view.flatten
-        .filterNot(containsComponentBoundToItself)
-        .filter(containsBindingToIteration(iterationData.iterationNumber - 1))
-      val (completePipelines, partialPipelines) = newPipelines.partition(_.isComplete)
 
+    eventualPipelines.map { rawPipelines =>
+
+      val newPipelines = rawPipelines.view.flatten
+      val fresh = newPipelines.filter(containsBindingToIteration(iterationData.iterationNumber - 1))
+
+      val (completePipelines, partialPipelines) = fresh.partition(_.isComplete)
+
+      logger.info(s"Discovered ${newPipelines.size} new RAW pipeline(s), ${fresh.size} new partial pipeline(s) in iteration ${iterationData.iterationNumber}")
       logger.info(s"Discovered ${completePipelines.size} new complete pipeline(s) and ${partialPipelines.size} new partial pipeline(s) in iteration ${iterationData.iterationNumber}")
 
+      val nextIterationGivenPipelines = (iterationData.givenPipelines ++ partialPipelines).distinct
+      val nextIterationCompletePipelines = iterationData.completedPipelines ++ completePipelines
+
+      completePipelines.foreach(p => logger.info(p.prettyFormat()))
+
       IterationData(
-        iterationData.givenPipelines ++ partialPipelines,
-        iterationData.completedPipelines ++ completePipelines,
+        nextIterationGivenPipelines,
+        nextIterationCompletePipelines,
         iterationData.possibleComponents,
         iterationData.iterationNumber + 1
       )
@@ -53,10 +64,6 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
   private def createInitialPipelines(dataSources: Seq[DataSourceInstance]): Future[Seq[Pipeline]] = {
     Future.sequence(dataSources.map(pipelineBuilder.buildInitialPipeline))
   }
-
-  private def containsComponentBoundToItself(pipeline: Pipeline): Boolean = pipeline.bindings.exists(
-    binding => binding.startComponent.componentInstance == binding.endComponent.componentInstance
-  )
 
   private def containsBindingToIteration(iterationNumber: Int)(pipeline: Pipeline): Boolean = pipeline.bindings.exists(
     binding => binding.startComponent.discoveryIteration == iterationNumber

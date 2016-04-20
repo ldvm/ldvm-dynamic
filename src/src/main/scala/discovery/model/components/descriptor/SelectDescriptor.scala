@@ -1,5 +1,3 @@
 package discovery.model.components.descriptor
 
-class SelectDescriptor extends Descriptor {
-  override def isMandatory: Boolean = false
-}
+case class SelectDescriptor(query: String, override val isMandatory: Boolean = false) extends Descriptor

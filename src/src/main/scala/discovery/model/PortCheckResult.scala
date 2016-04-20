@@ -4,10 +4,10 @@ case class PortCheckResult(status: PortCheckResult.Status.Status, maybeState: Op
 
 object PortCheckResult {
 
-  def apply(success: Boolean): PortCheckResult = {
+  def apply(success: Boolean, state: Option[ComponentState]): PortCheckResult = {
     success match {
-      case true => PortCheckResult(Status.Success)
-      case false => PortCheckResult(Status.Failure)
+      case true => PortCheckResult(Status.Success, state)
+      case false => PortCheckResult(Status.Failure, state)
     }
   }
 

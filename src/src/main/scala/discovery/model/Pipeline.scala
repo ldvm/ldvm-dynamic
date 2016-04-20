@@ -1,6 +1,6 @@
 package discovery.model
 
-import discovery.model.components.VisualizerInstance
+import discovery.model.components.{ComponentInstanceWithInputs, VisualizerInstance}
 
 // TODO: do we need components at all? We can always infer them from bindings
 case class Pipeline(components: Seq[PipelineComponent], bindings: Seq[PortBinding], lastComponent: PipelineComponent, lastOutputDataSample: DataSample) {
@@ -9,5 +9,9 @@ case class Pipeline(components: Seq[PipelineComponent], bindings: Seq[PortBindin
   def prettyFormat(offset:String = "") :String= {
     val formattedBindings = bindings.map(_.prettyFormat).mkString(", ")
     s"${offset}Pipeline(\n$offset  bindings=$formattedBindings\n$offset  lastComponent=${lastComponent.componentInstance}\n$offset)"
+  }
+
+  def endsWith(componentInstance: ComponentInstanceWithInputs) : Boolean = {
+    lastComponent.componentInstance == componentInstance
   }
 }
