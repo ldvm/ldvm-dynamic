@@ -82,7 +82,7 @@ object PopulationModels {
       |     void:class <http://ruian.linked.opendata.cz/ontology/Obec> .
       |
       | <http://dbpedia.org/dataset/populatedPlaces> a void:Dataset ;
-      |     ldvm:targetClass <http://dbpedia.org/ontology/PopulatedPlace> .
+      |     void:class <http://dbpedia.org/ontology/PopulatedPlace> .
       |
     """.stripMargin
   )
