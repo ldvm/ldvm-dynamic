@@ -9,7 +9,7 @@ trait PipelineAsserts {
 
   case class ExpectedBinding(startComponent: ComponentInstance, portName: String, endComponent: ComponentInstance) {
 
-    override def toString: String = s"ExpectedBiding($startComponent--$portName->$endComponent)"
+    override def toString: String = s"\nExpectedBiding(${startComponent.getClass.getSimpleName} --$portName-> ${endComponent.getClass.getSimpleName})"
   }
 
   object ExpectedBinding {

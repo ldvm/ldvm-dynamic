@@ -18,7 +18,8 @@ class PipelineBuilder(implicit executor: ExecutionContext) {
         pipelineComponents(portMatches, newLastComponent),
         pipelineBindings(portMatches, newLastComponent),
         newLastComponent,
-        dataSample)
+        dataSample
+      )
     }
   }
 
@@ -29,7 +30,8 @@ class PipelineBuilder(implicit executor: ExecutionContext) {
         Seq(pipelineComponent),
         Seq(),
         pipelineComponent,
-        outputDataSample)
+        outputDataSample
+      )
     }
   }
 

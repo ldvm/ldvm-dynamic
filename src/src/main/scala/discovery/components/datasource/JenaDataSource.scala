@@ -6,7 +6,7 @@ import discovery.model.components.DataSourceInstance
 
 import scala.concurrent.Future
 
-class JenaDataSource(model: Model, name: String = "") extends DataSourceInstance {
+class JenaDataSource(model: Model, name: String = "", val isLarge: Boolean = false, val isLinkset: Boolean = false) extends DataSourceInstance {
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
     Future.successful(ModelDataSample(model))
   }

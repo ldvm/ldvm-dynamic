@@ -1,14 +1,15 @@
 package discovery.components.transformer
 
 import discovery.components.common.DescriptorChecker
+import discovery.model
 import discovery.model._
-import discovery.model.components.TransformerInstance
+import discovery.model.components.{TransformerInstance, UpdateQuery}
 import discovery.model.components.descriptor.{AskDescriptor, ConstructDescriptor}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class PopulationTransformer extends TransformerInstance with DescriptorChecker {
+class Gml2SchemaOrgTransformer extends TransformerInstance with DescriptorChecker {
   val portName = "INPUT"
   val port = Port(portName, 0)
 
@@ -46,33 +47,16 @@ class PopulationTransformer extends TransformerInstance with DescriptorChecker {
   override def getInputPorts: Seq[Port] = Seq(port)
 
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
-    dataSamples(port).executeConstruct(ConstructDescriptor(
+    val newSample = dataSamples(port).transform(UpdateQuery(
       """
         | PREFIX s: <http://schema.org/>
         | PREFIX dbo: <http://dbpedia.org/ontology/>
-        | PREFIX dbp: <http://dbpedia.org/property/>
         | PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         | PREFIX ruian: <http://ruian.linked.opendata.cz/ontology/>
         | PREFIX ogcgml:  <http://www.opengis.net/ont/gml#>
         |
-        | CONSTRUCT {
-        |  ?p a dbo:PopulatedPlace ;
-        |     a ?type ;
-        |     dbo:populationTotal ?population ;
-        |     rdf:type s:Place ;
-        |     s:name ?name ;
-        |     s:geo [
-        |       rdf:type s:GeoCoordinates ;
-        |       s:longitude ?lng ;
-        |       s:latitude  ?lat
-        |     ] .
-        | } WHERE {
-        |  ?p a dbo:PopulatedPlace ;
-        |     dbp:officialName ?name ;
-        |     dbo:populationTotal ?population ;
-        |     ruian:definicniBod ?definicniBod .
-        |
-        |  OPTIONAL { ?p a ?type . }
+        | DELETE {
+        |  ?p ruian:definicniBod ?definicniBod .
         |
         |  ?definicniBod rdf:type ogcgml:MultiPoint ;
         |     ogcgml:pointMember ?pointMember .
@@ -83,10 +67,27 @@ class PopulationTransformer extends TransformerInstance with DescriptorChecker {
         |     s:longitude ?lng ;
         |     s:latitude ?lat .
         | }
+        | INSERT {
+        |   ?p s:geo [
+        |       rdf:type s:GeoCoordinates ;
+        |       s:longitude ?lng ;
+        |       s:latitude  ?lat
+        |     ] .
+        | }
+        | WHERE {
+        |  ?p a dbo:PopulatedPlace ;
+        |     ruian:definicniBod ?definicniBod .
         |
-      """.stripMargin)).map{ m =>
-      val s = ModelDataSample(m)
-      s
-    }
+        |  ?definicniBod rdf:type ogcgml:MultiPoint ;
+        |     ogcgml:pointMember ?pointMember .
+        |
+        |  ?pointMember rdf:type ogcgml:Point ;
+        |     s:geo ?geo .
+        |  ?geo rdf:type s:GeoCoordinates ;
+        |     s:longitude ?lng ;
+        |     s:latitude ?lat .
+        | }
+      """.stripMargin))
+      Future.successful(ModelDataSample(newSample))
   }
 }

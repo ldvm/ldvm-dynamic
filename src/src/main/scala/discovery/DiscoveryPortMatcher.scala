@@ -3,7 +3,7 @@ package discovery
 import com.typesafe.scalalogging.LazyLogging
 import discovery.model.PortCheckResult.Status
 import discovery.model._
-import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs}
+import discovery.model.components.{ComponentInstance, ComponentInstanceWithInputs, DataSourceInstance}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -21,7 +21,7 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
     lastStates: Seq[Option[ComponentState]],
     iteration: Int,
     componentInstance: ComponentInstanceWithInputs
-    ): Future[Seq[Pipeline]] = {
+  ): Future[Seq[Pipeline]] = {
     remainingPorts match {
       case Nil =>
         portMatches.values.forall(_.nonEmpty) match {
@@ -29,8 +29,18 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
           case false => Future.successful(Seq())
         }
       case headPort :: tail =>
-        tryMatchGivenPipelinesWithPort(headPort, givenPipelines, lastStates, componentInstance).flatMap { matches =>
-          tryMatchPorts(tail, givenPipelines, portMatches + (headPort -> matches), matches.map(_.maybeState), iteration, componentInstance)
+        val linksets = portMatches.flatMap {
+          case pm => pm._2.flatMap {
+            case m => m.startPipeline.components.map(_.componentInstance).filter {
+              case c : DataSourceInstance => c.isLinkset
+              case _ => false
+            }
+          }
+        }.toSeq.distinct
+        val filteredPipelines = givenPipelines.filterNot(_.components.exists(c => linksets.contains(c.componentInstance)))
+        println(linksets.size, filteredPipelines.size, givenPipelines.size)
+        tryMatchGivenPipelinesWithPort(headPort, filteredPipelines, lastStates, componentInstance).flatMap { matches =>
+          tryMatchPorts(tail, filteredPipelines, portMatches + (headPort -> matches), matches.map(_.maybeState), iteration, componentInstance)
         }
     }
   }
@@ -47,11 +57,15 @@ class DiscoveryPortMatcher(pipelineBuilder: PipelineBuilder)(implicit executor: 
       } yield {
         val eventualCheckResult = componentInstance.checkPort(port, state, pipeline.lastOutputDataSample)
         eventualCheckResult.map {
-          case c: PortCheckResult if c.status == Status.Success => Some(PortMatch(port, pipeline, c.maybeState))
+          case c: PortCheckResult if c.status == Status.Success =>
+            //logger.info("Matched port {} of {} with {}.", port, componentInstance, pipeline.lastComponent)
+            Some(PortMatch(port, pipeline, c.maybeState))
           case c: PortCheckResult if c.status == Status.Error =>
             logger.error("Failed matching port {} of {} with error", port, componentInstance)
             None
-          case _ => None
+          case _ =>
+            //logger.info("Port {} of {} not matched with {}.", port, componentInstance, pipeline.lastComponent)
+            None
         }
       }
     }

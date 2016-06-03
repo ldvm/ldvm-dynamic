@@ -1,3 +1,5 @@
 package discovery.model
 
-case class ComponentState(rdfData: String)
+trait ComponentState
+
+case class StringComponentState(data: String) extends ComponentState

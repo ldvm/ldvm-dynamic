@@ -1,6 +1,7 @@
 package discovery
 
 import com.typesafe.scalalogging.StrictLogging
+import discovery.components.analyzer.LinksetBasedUnion
 import discovery.model._
 import discovery.model.components.DataSourceInstance
 import discovery.model.internal.IterationData
@@ -12,8 +13,13 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
 
   def discover(input: DiscoveryInput): Future[Seq[Pipeline]] = {
     createInitialPipelines(input.dataSources).flatMap { initialPipelines =>
-      val possibleComponents = input.processors ++ input.visualizers
-      iterate(IterationData(initialPipelines, completedPipelines = Seq(), possibleComponents, 1))
+      val data = IterationData(
+        givenPipelines = initialPipelines,
+        completedPipelines = Seq(),
+        availableComponents = input,
+        iterationNumber = 1
+      )
+      iterate(data)
     }
   }
 
@@ -32,10 +38,28 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
     }
   }
 
-  private def iterationBody(iterationData: IterationData): Future[IterationData] = {
-    val eventualPipelines = Future.sequence {
-      iterationData.possibleComponents.map { c => portMatcher.tryMatchPorts(c, iterationData.givenPipelines, iterationData.iterationNumber) }
+  private def endsWithLargeDataset(pipeline: Pipeline): Boolean = {
+    pipeline.lastComponent.componentInstance match {
+      case ci: DataSourceInstance => ci.isLarge
+      case _ => false
     }
+  }
+
+  private def iterationBody(iterationData: IterationData): Future[IterationData] = {
+
+    val (extractorCandidates, otherPipelines) = iterationData.givenPipelines.partition(endsWithLargeDataset)
+    val extractors = iterationData.availableComponents.extractors
+    val otherComponents = iterationData.availableComponents.processors ++ iterationData.availableComponents.visualizers
+
+    val eventualPipelines = Future.sequence(Seq(
+      (extractorCandidates, extractors),
+      (otherPipelines, otherComponents)
+    ).flatMap {
+      case (pipelines, components) => components.map {
+        case c if c.isInstanceOf[LinksetBasedUnion] => portMatcher.tryMatchPorts(c, pipelines.filterNot(_.components.exists(_.componentInstance == c)), iterationData.iterationNumber)
+        case c => portMatcher.tryMatchPorts(c, pipelines, iterationData.iterationNumber)
+      }
+    })
 
     eventualPipelines.map { rawPipelines =>
 
@@ -55,7 +79,7 @@ class Discovery(portMatcher: DiscoveryPortMatcher, pipelineBuilder: PipelineBuil
       IterationData(
         nextIterationGivenPipelines,
         nextIterationCompletePipelines,
-        iterationData.possibleComponents,
+        iterationData.availableComponents,
         iterationData.iterationNumber + 1
       )
     }

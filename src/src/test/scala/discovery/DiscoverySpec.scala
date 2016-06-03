@@ -12,7 +12,7 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val dummySource = new JenaDataSource(ModelFactory.createDefaultModel())
     val dummySuccessVisualizer = new DummyVisualizer(Status.Success)
 
-    val input = new DiscoveryInput(Seq(dummySource), Seq(dummySuccessVisualizer), Seq())
+    val input = new DiscoveryInput(Seq(dummySource), Seq(), Seq(dummySuccessVisualizer), Seq())
     val pipelines = createDiscovery().discover(input).futureValue
 
     pipelines shouldContainPipeline ExpectedPipeline(dummySuccessVisualizer, ExpectedBinding(dummySource, dummySuccessVisualizer.port, dummySuccessVisualizer))
@@ -23,7 +23,7 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val dummySource = new JenaDataSource(ModelFactory.createDefaultModel())
     val dummySuccessVisualizer = new DummyVisualizer(Status.Failure)
 
-    val input = new DiscoveryInput(Seq(dummySource), Seq(dummySuccessVisualizer), Seq())
+    val input = new DiscoveryInput(Seq(dummySource), Seq(), Seq(dummySuccessVisualizer), Seq())
     val pipelines = createDiscovery().discover(input).futureValue
 
     pipelines shouldBe empty
@@ -34,7 +34,7 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val visualizerComponent1 = new DummyVisualizer(Status.Success)
     val visualizerComponent2 = new DummyVisualizer(Status.Success)
 
-    val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent1, visualizerComponent2), Seq())
+    val input = new DiscoveryInput(Seq(sourceComponent), Seq(), Seq(visualizerComponent1, visualizerComponent2), Seq())
     val pipelines = createDiscovery().discover(input).futureValue
 
     pipelines shouldContainPipeline ExpectedPipeline(visualizerComponent1, ExpectedBinding(sourceComponent, visualizerComponent1.port, visualizerComponent1))
@@ -47,7 +47,7 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val transformerComponent = new DummyTransformer(Status.Success)
     val visualizerComponent = new DummyVisualizer(Status.Success)
 
-    val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent), Seq(transformerComponent))
+    val input = new DiscoveryInput(Seq(sourceComponent), Seq(), Seq(visualizerComponent), Seq(transformerComponent))
     val pipelines = createDiscovery().discover(input).futureValue
 
     pipelines shouldContainPipeline ExpectedPipeline(
@@ -67,7 +67,7 @@ class DiscoverySpec extends LdvmSpec with DiscoveryCreator {
     val analyzerComponent = new DummyTwoPortAnalyzer()
     val visualizerComponent = new DummyVisualizer(Status.Success)
 
-    val input = new DiscoveryInput(Seq(sourceComponent), Seq(visualizerComponent), Seq(analyzerComponent))
+    val input = new DiscoveryInput(Seq(sourceComponent), Seq(), Seq(visualizerComponent), Seq(analyzerComponent))
     val pipelines = createDiscovery().discover(input).futureValue
 
     pipelines shouldContainPipeline ExpectedPipeline(

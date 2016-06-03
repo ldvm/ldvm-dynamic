@@ -3,18 +3,18 @@ package discovery.components.analyzer
 import scala.concurrent.ExecutionContext.Implicits.global
 import discovery.components.common.DescriptorChecker
 import discovery.model._
-import discovery.model.components.AnalyzerInstance
+import discovery.model.components.{AnalyzerInstance, ExtractorInstance}
 import discovery.model.components.descriptor.{AskDescriptor, ConstructDescriptor}
 
 import scala.concurrent.Future
 
-class TownsExtractorAnalyzer extends AnalyzerInstance with DescriptorChecker {
+class TownsExtractor extends ExtractorInstance with DescriptorChecker {
   val portName: String = "INPUT_PORT"
   val port = Port(portName, 0)
 
   private val descriptor = AskDescriptor(
       """
-      |   prefix xsd:  <http://www.w3.org/2001/XMLSchema#>
+      |    prefix xsd:  <http://www.w3.org/2001/XMLSchema#>
       |    prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       |    prefix skos:  <http://www.w3.org/2004/02/skos/core#>
       |    prefix s:  <http://schema.org/>
@@ -40,8 +40,6 @@ class TownsExtractorAnalyzer extends AnalyzerInstance with DescriptorChecker {
       |    ?geo  rdf:type  s:GeoCoordinates ;
       |      s:longitude  ?lng ;
       |      s:latitude  ?lat .
-      |
-      |     OPTIONAL { ?pou s:name ?pouname . }
       |    }
       """.stripMargin
   )
@@ -49,14 +47,14 @@ class TownsExtractorAnalyzer extends AnalyzerInstance with DescriptorChecker {
   override def getOutputDataSample(state: Option[ComponentState], dataSamples: Map[Port, DataSample]): Future[DataSample] = {
     dataSamples(port).executeConstruct(ConstructDescriptor(
       """
-        |   prefix xsd:  <http://www.w3.org/2001/XMLSchema#>
-        |    prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        |    prefix skos:  <http://www.w3.org/2004/02/skos/core#>
-        |    prefix s:  <http://schema.org/>
-        |    prefix ogcgml:  <http://www.opengis.net/ont/gml#>
-        |    prefix ruian:  <http://ruian.linked.opendata.cz/ontology/>
+        | prefix xsd:  <http://www.w3.org/2001/XMLSchema#>
+        | prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        | prefix skos:  <http://www.w3.org/2004/02/skos/core#>
+        | prefix s:  <http://schema.org/>
+        | prefix ogcgml:  <http://www.opengis.net/ont/gml#>
+        | prefix ruian:  <http://ruian.linked.opendata.cz/ontology/>
         |
-        |CONSTRUCT {
+        | CONSTRUCT {
         |    ?obec
         |      rdf:type  ruian:Obec ;
         |      skos:notation  ?notation ;

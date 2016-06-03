@@ -13,10 +13,10 @@ class PopulationVisualizer extends VisualizerInstance with DescriptorChecker {
   private val descriptor = AskDescriptor(
     """
       |PREFIX s: <http://schema.org/>
-      |PREFIX dbo: <http://dbpedia.org/ontology/>
+      |PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       |
       |    ASK {
-      |      ?p dbo:populationTotal ?populationCount ;
+      |      ?p rdf:Value ?populationCount ;
       |         s:name ?placeName ;
       |         s:geo [
       |           s:latitude ?lat ;

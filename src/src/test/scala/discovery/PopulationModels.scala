@@ -15,7 +15,6 @@ object PopulationModels {
       | PREFIX ruiands: <http://ruian.linked.opendata.cz/resource/dataset>
       | PREFIX void: <http://rdfs.org/ns/void#>
       |
-      |
     """.stripMargin
 
   val dbpedia: Model = JenaUtil.modelFromTtl(
@@ -76,9 +75,13 @@ object PopulationModels {
       |     void:objectsTarget <http://dbpedia.org/dataset/populatedPlaces> ;
       |     void:linkPredicate owl:sameAs ;
       |     void:exampleResource <http://ruian.linked.opendata.cz/resource/obce/554782> ;
-      |     void:uriSpace "http://ruian.linked.opendata.cz/resource/obce/" ;
-      |     ldvm:sourceClass <http://ruian.linked.opendata.cz/ontology/Obec> ;
-      |     ldvm:targetClass <http://dbpedia.org/ontology/PopulatedPlace> .
+      |     void:uriSpace "http://ruian.linked.opendata.cz/resource/obce/" .
+      |
+      | <http://ruian.linked.opendata.cz/dataset/ruian/obce> a void:Dataset ;
+      |     void:class <http://ruian.linked.opendata.cz/ontology/Obec> .
+      |
+      | <http://dbpedia.org/dataset/populatedPlaces> a void:Dataset ;
+      |     void:class <http://dbpedia.org/ontology/PopulatedPlace> .
       |
     """.stripMargin
   )

@@ -1,6 +1,10 @@
 package discovery.model
 
-import discovery.model.components.{DataSourceInstance, ProcessorInstance, VisualizerInstance}
+import discovery.model.components.{DataSourceInstance, ExtractorInstance, ProcessorInstance, VisualizerInstance}
 
-// TODO: do we need to pass data sources/visualizers/processors separately?
-case class DiscoveryInput(dataSources: Seq[DataSourceInstance], visualizers: Seq[VisualizerInstance], processors: Seq[ProcessorInstance])
+case class DiscoveryInput(
+  dataSources: Seq[DataSourceInstance],
+  extractors: Seq[ExtractorInstance],
+  visualizers: Seq[VisualizerInstance],
+  processors: Seq[ProcessorInstance]
+)
